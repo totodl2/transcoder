@@ -1,0 +1,51 @@
+{
+  "constraints": {
+    "audio": {
+      "parsers": [],
+      "decoders": []
+    },
+    "video": {
+      "parsers": [],
+      "decoders": []
+    },
+    "demuxers": []
+  },
+  "presets": {
+    "480": {
+      "height": 480,
+      "fps": "24/1001",
+      "muxer": "mp4mux",
+      "video": [
+        {
+          "instance": "element",
+          "type": "nvh264enc",
+          "props": {
+            "preset": 2,
+            "bitrate": 256,
+            "gop-size": 50
+          }
+        },
+        {
+          "instance": "element",
+          "type": "h264parse",
+          "props": {
+            "pts-interpolation": true
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "type": "audioconvert"
+        },
+        {
+          "instance": "element",
+          "type": "faac",
+          "props": {
+            "bitrate": 64
+          }
+        }
+      ]
+    }
+  }
+}

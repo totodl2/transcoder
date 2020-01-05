@@ -38,6 +38,8 @@
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "koa": "^2.11.0",
-    "koa-bodyparser": "^4.2.1"
+    "koa-bodyparser": "^4.2.1",
+    "node-gstreamer-launch": "^0.1.1",
+    "node-gstreamer-tools": "^1.0.1"
   }
 }

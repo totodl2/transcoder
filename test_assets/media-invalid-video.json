@@ -1,0 +1,148 @@
+{
+  "tags": {
+    "audio codec": "AC-3 audio",
+    "bitrate": 192000,
+    "encoder": "AVI-Mux GUI 1.17.4, Nov  5 2005  22:53:48",
+    "container format": "AVI",
+    "video codec": "MPEG-4"
+  },
+  "duration": {
+    "h": 0,
+    "m": 40,
+    "s": 55,
+    "us": 840000000
+  },
+  "seekable": true,
+  "live": false,
+  "topology": {
+    "type": "container",
+    "codec": {
+      "type": "video/x-msvideo"
+    },
+    "streams": [
+      {
+        "type": "audio",
+        "codec": {
+          "type": "audio/x-ac3",
+          "framed": true,
+          "rate": 48000,
+          "channels": 2,
+          "alignment": "frame"
+        },
+        "tags": {
+          "audio codec": "AC-3 audio",
+          "bitrate": 192000,
+          "encoder": "AVI-Mux GUI 1.17.4, Nov  5 2005  22:53:48",
+          "container format": "AVI"
+        },
+        "streamId": "fe1bd00d7d9fb74f1387390036344b7410e024fe38025b3984aa44c2fe7d6291/003",
+        "language": null,
+        "channels": 2,
+        "sampleRate": 48000,
+        "depth": 32,
+        "bitrate": 192000,
+        "maxBitrate": 0
+      },
+      {
+        "type": "audio",
+        "codec": {
+          "type": "audio/x-ac3",
+          "framed": true,
+          "rate": 48000,
+          "channels": 2,
+          "alignment": "frame"
+        },
+        "tags": {
+          "audio codec": "AC-3 audio",
+          "bitrate": 192000,
+          "encoder": "AVI-Mux GUI 1.17.4, Nov  5 2005  22:53:48",
+          "container format": "AVI"
+        },
+        "streamId": "fe1bd00d7d9fb74f1387390036344b7410e024fe38025b3984aa44c2fe7d6291/002",
+        "language": null,
+        "channels": 2,
+        "sampleRate": 48000,
+        "depth": 32,
+        "bitrate": 192000,
+        "maxBitrate": 0
+      },
+      {
+        "type": "video",
+        "codec": {
+          "type": "video/x-not-found",
+          "mpegversion": 4,
+          "systemstream": false,
+          "framerate": {
+            "num": 25,
+            "denom": 1
+          },
+          "width": 684,
+          "height": 512,
+          "parsed": true,
+          "profile": "simple",
+          "level": "3",
+          "codec_data": {
+            "type": "Buffer",
+            "data": [
+              0,
+              0,
+              1,
+              176,
+              3,
+              0,
+              0,
+              1,
+              181,
+              9,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              32,
+              0,
+              134,
+              132,
+              0,
+              103,
+              12,
+              85,
+              145,
+              0,
+              81,
+              143
+            ]
+          },
+          "pixel-aspect-ratio": {
+            "num": 1,
+            "denom": 1
+          }
+        },
+        "tags": {
+          "video codec": "MPEG-4",
+          "bitrate": 878473,
+          "encoder": "AVI-Mux GUI 1.17.4, Nov  5 2005  22:53:48",
+          "container format": "AVI"
+        },
+        "streamId": "fe1bd00d7d9fb74f1387390036344b7410e024fe38025b3984aa44c2fe7d6291/001",
+        "width": 684,
+        "height": 512,
+        "depth": 24,
+        "framerate": {
+          "num": 25,
+          "denom": 1
+        },
+        "pixelAspectRatio": {
+          "num": 1,
+          "denom": 1
+        },
+        "interlaced": false,
+        "bitrate": 878473,
+        "image": false,
+        "maxBitrate": 0
+      }
+    ]
+  }
+}

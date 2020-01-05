@@ -1,0 +1,191 @@
+{
+  "tags": {
+    "container format": "Matroska",
+    "audio codec": "MPEG-4 AAC audio",
+    "language code": "fr",
+    "encoder": "Lavf58.20.100",
+    "bitrate": 95999,
+    "extended comment": "DURATION=00:00:20.019000000",
+    "video codec": "H264"
+  },
+  "duration": { "h": 0, "m": 0, "s": 20, "us": 186000000 },
+  "seekable": true,
+  "live": false,
+  "topology": {
+    "type": "container",
+    "codec": { "type": "video/x-matroska" },
+    "streams": [
+      {
+        "type": "video",
+        "codec": {
+          "type": "video/x-h264",
+          "level": "4.1",
+          "profile": "high",
+          "codec_data": {
+            "type": "Buffer",
+            "data": [
+              1,
+              100,
+              0,
+              41,
+              255,
+              225,
+              0,
+              28,
+              103,
+              100,
+              0,
+              41,
+              172,
+              82,
+              9,
+              1,
+              64,
+              22,
+              236,
+              5,
+              168,
+              8,
+              8,
+              10,
+              0,
+              0,
+              7,
+              210,
+              0,
+              1,
+              119,
+              1,
+              30,
+              48,
+              99,
+              19,
+              1,
+              0,
+              7,
+              104,
+              232,
+              142,
+              10,
+              203,
+              34,
+              192
+            ]
+          },
+          "stream-format": "avc",
+          "alignment": "au",
+          "width": 1280,
+          "height": 720,
+          "framerate": { "num": 24000, "denom": 1001 },
+          "interlace-mode": "mixed",
+          "colorimetry": "bt709",
+          "pixel-aspect-ratio": { "num": 1, "denom": 1 },
+          "chroma-format": "4:2:0",
+          "bit-depth-luma": 8,
+          "bit-depth-chroma": 8,
+          "parsed": true
+        },
+        "tags": {
+          "container format": "Matroska",
+          "video codec": "H264",
+          "language code": "und",
+          "encoder": "Lavf58.20.100",
+          "extended comment": "DURATION=00:00:20.186000000",
+          "bitrate": 1599098
+        },
+        "streamId": "f4b077607f055af6542c5b571ae95120033d8d92c629efe853e21f514f694296/005:005",
+        "width": 1280,
+        "height": 720,
+        "depth": 24,
+        "framerate": { "num": 24000, "denom": 1001 },
+        "pixelAspectRatio": { "num": 1, "denom": 1 },
+        "interlaced": true,
+        "bitrate": 1599098,
+        "image": false,
+        "maxBitrate": 0
+      },
+      {
+        "type": "subtitles",
+        "codec": { "type": "text/x-raw", "format": "pango-markup" },
+        "tags": {
+          "container format": "Matroska",
+          "encoder": "Lavf58.20.100",
+          "language code": "fr"
+        },
+        "streamId": "f4b077607f055af6542c5b571ae95120033d8d92c629efe853e21f514f694296/004:004",
+        "language": "fr"
+      },
+      {
+        "type": "subtitles",
+        "codec": { "type": "text/x-raw", "format": "pango-markup" },
+        "tags": {
+          "container format": "Matroska",
+          "encoder": "Lavf58.20.100",
+          "language code": "fr"
+        },
+        "streamId": "f4b077607f055af6542c5b571ae95120033d8d92c629efe853e21f514f694296/003:003",
+        "language": "fr"
+      },
+      {
+        "type": "audio",
+        "codec": {
+          "type": "audio/mpeg",
+          "mpegversion": 4,
+          "framed": true,
+          "stream-format": "raw",
+          "codec_data": { "type": "Buffer", "data": [17, 176, 86, 229, 0] },
+          "level": "4",
+          "base-profile": "lc",
+          "profile": "lc",
+          "channels": 6,
+          "rate": 48000
+        },
+        "tags": {
+          "container format": "Matroska",
+          "audio codec": "MPEG-4 AAC audio",
+          "language code": "ja",
+          "encoder": "Lavf58.20.100",
+          "bitrate": 252580,
+          "extended comment": "DURATION=00:00:20.019000000"
+        },
+        "streamId": "f4b077607f055af6542c5b571ae95120033d8d92c629efe853e21f514f694296/002:002",
+        "language": "ja",
+        "channels": 6,
+        "sampleRate": 48000,
+        "depth": 32,
+        "bitrate": 252580,
+        "maxBitrate": 0
+      },
+      {
+        "type": "audio",
+        "codec": {
+          "type": "audio/mpeg",
+          "mpegversion": 4,
+          "framed": true,
+          "stream-format": "raw",
+          "codec_data": { "type": "Buffer", "data": [17, 144, 86, 229, 0] },
+          "level": "2",
+          "base-profile": "lc",
+          "profile": "lc",
+          "channels": 2,
+          "rate": 48000
+        },
+        "tags": {
+          "container format": "Matroska",
+          "audio codec": "MPEG-4 AAC audio",
+          "language code": "fr",
+          "encoder": "Lavf58.20.100",
+          "bitrate": 95999,
+          "extended comment": "DURATION=00:00:20.019000000"
+        },
+        "streamId": "f4b077607f055af6542c5b571ae95120033d8d92c629efe853e21f514f694296/001:001",
+        "language": "fr",
+        "channels": 2,
+        "sampleRate": 48000,
+        "depth": 32,
+        "bitrate": 95999,
+        "maxBitrate": 0
+      }
+    ]
+  }
+}

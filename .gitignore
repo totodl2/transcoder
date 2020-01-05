@@ -1,3 +1,6 @@
 node_modules
 .vscode
 .directory
+output.json
+features.json
+src/commands/tt.js
