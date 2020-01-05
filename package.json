@@ -1,0 +1,43 @@
+{
+  "name": "transcoder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest ./src/",
+    "test:watch": "jest --watchAll ./src",
+    "lint": "npm run lint:eslint -- ./src",
+    "lint:eslint": "eslint -c .eslintrc.prod.json --ignore-path .gitignore",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "npm run-script lint:eslint"
+  },
+  "pre-commit": [
+    "lint:staged"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.webini.fr:22122/totodl/api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.2",
+    "nodemon": "^1.19.4",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1"
+  }
+}
