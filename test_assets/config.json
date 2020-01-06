@@ -10,6 +10,9 @@
     },
     "demuxers": []
   },
+  "muxer": {
+    "type": "mp4mux"
+  },
   "presets": {
     "480": {
       "height": 480,
@@ -18,6 +21,7 @@
       "video": [
         {
           "instance": "element",
+          "max": 2,
           "type": "nvh264enc",
           "props": {
             "preset": 2,

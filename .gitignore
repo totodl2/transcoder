@@ -4,3 +4,4 @@ node_modules
 output.json
 features.json
 src/commands/tt.js
+.idea
