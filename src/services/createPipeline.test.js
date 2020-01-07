@@ -1,15 +1,17 @@
 const createPipeline = require('./createPipeline');
-const media = require('../../test_assets/media');
+const util = require('util');
+const media = require('../../test_assets/media2');
 const conf = require('../../test_assets/config');
 
 describe('createPipeline', () => {
   it('ok', () => {
     const pp = createPipeline({
-      file: '/not/found',
-      outputDir: '/tmp',
+      filepath: '/transco/mm.mkv',
+      outputDir: '/transco/test',
       media,
       conf,
     });
-    console.log(pp.asArray());
+    console.log(JSON.stringify(pp.asArray()));
+    console.log(pp.asArray().join(' '));
   });
 });

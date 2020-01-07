@@ -10,43 +10,227 @@
     },
     "demuxers": []
   },
-  "muxer": {
-    "type": "mp4mux"
-  },
   "presets": {
     "480": {
-      "height": 480,
-      "fps": "24/1001",
-      "muxer": "mp4mux",
+      "muxer": {
+        "type": "mp4mux"
+      },
       "video": [
         {
           "instance": "element",
-          "max": 2,
-          "type": "nvh264enc",
-          "props": {
-            "preset": 2,
-            "bitrate": 256,
-            "gop-size": 50
+          "params": {
+            "type": "videoconvert"
           }
         },
         {
           "instance": "element",
-          "type": "h264parse",
-          "props": {
-            "pts-interpolation": true
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": { "height": 480 }
+          }
+        },
+        {
+          "max": 2,
+          "instance": "element",
+          "params": {
+            "type": "nvh264enc",
+            "props": {
+              "preset": 2,
+              "bitrate": 256,
+              "bitrateUnit": "Kb",
+              "gop-size": 50
+            }
+          },
+          "fallback": {
+            "type": "x264enc",
+            "props": {
+              "bframes": 50,
+              "bitrate": 256,
+              "bitrateUnit": "Kb",
+              "speed-preset": 7
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse",
+            "props": {
+              "pts-interpolation": true
+            }
           }
         }
       ],
       "audio": [
         {
           "instance": "element",
-          "type": "audioconvert"
+          "params": {
+            "type": "audioconvert"
+          }
         },
         {
           "instance": "element",
-          "type": "faac",
-          "props": {
-            "bitrate": 64
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 64
+            }
+          }
+        }
+      ]
+    },
+    "720": {
+      "minHeight": 720,
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": { "height": 720 }
+          }
+        },
+        {
+          "max": 2,
+          "instance": "element",
+          "params": {
+            "type": "nvh264enc",
+            "props": {
+              "preset": 2,
+              "bitrate": 512,
+              "bitrateUnit": "Kb",
+              "gop-size": 50
+            }
+          },
+          "fallback": {
+            "type": "x264enc",
+            "props": {
+              "bframes": 50,
+              "bitrate": 512,
+              "bitrateUnit": "Kb",
+              "speed-preset": 7
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse",
+            "props": {
+              "pts-interpolation": true
+            }
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 92
+            }
+          }
+        }
+      ]
+    },
+    "1080": {
+      "minHeight": 1080,
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": { "height": 1080 }
+          }
+        },
+        {
+          "max": 2,
+          "instance": "element",
+          "params": {
+            "type": "nvh264enc",
+            "props": {
+              "preset": 2,
+              "bitrate": 1024,
+              "bitrateUnit": "Kb",
+              "gop-size": 50
+            }
+          },
+          "fallback": {
+            "type": "x264enc",
+            "props": {
+              "bframes": 50,
+              "bitrate": 1024,
+              "bitrateUnit": "Kb",
+              "speed-preset": 7
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse",
+            "props": {
+              "pts-interpolation": true
+            }
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 128
+            }
           }
         }
       ]

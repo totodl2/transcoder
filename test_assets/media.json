@@ -76,8 +76,8 @@
             "num": 25,
             "denom": 1
           },
-          "width": 684,
-          "height": 512,
+          "width": 1920,
+          "height": 1080,
           "parsed": true,
           "profile": "simple",
           "level": "3",
@@ -127,8 +127,8 @@
           "container format": "AVI"
         },
         "streamId": "fe1bd00d7d9fb74f1387390036344b7410e024fe38025b3984aa44c2fe7d6291/001",
-        "width": 684,
-        "height": 512,
+        "width": 1920,
+        "height": 1080,
         "depth": 24,
         "framerate": {
           "num": 25,
