@@ -15,7 +15,7 @@ services:
     volumes:
       - ./:/home/node/server
     ports:
-      - 3000:3000
+      - 4000:3000
     entrypoint: 'node'
     command: ['node_modules/.bin/nodemon', 'run.js', 'server']
 
@@ -29,7 +29,7 @@ services:
       ARENA_PORT: 3000
       ARENA_HOST: 0.0.0.0
     ports:
-      - 3001:3000
+      - 4001:3000
     links:
       - redis:redis.host
     volumes:

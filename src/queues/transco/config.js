@@ -1,9 +1,9 @@
 module.exports = {
   // required string
-  name: 'transco',
+  name: `${process.env.REDIS_PREFIX || ''}transco`,
   // host display name, give it a helpful name for reference
   // required string
-  hostId: 'Transco',
+  hostId: `Transco ${process.env.REDIS_PREFIX || ''}`.trim(),
   // optional string
   // default: null (will assume Bull)
   type: 'bull',
