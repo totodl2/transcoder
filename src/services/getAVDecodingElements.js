@@ -27,7 +27,8 @@ module.exports = (topology, constraints = {}) => {
     const {
       type,
       streamId,
-      codec: { type: mimetype, ...caps },
+      // eslint-disable-next-line camelcase
+      codec: { type: mimetype, codec_data, ...caps },
     } = topology.streams[i];
     const baseKlass = [];
     const { parsers: allowedParsers = [], decoders: allowedDecoders = [] } =
@@ -58,18 +59,17 @@ module.exports = (topology, constraints = {}) => {
       return false;
     }
 
+    const { 'stream-format': sf, ...decodingCaps } = caps;
     const decoders = findFeatures({
       mimetype,
       directions: [DIRECTIONS.SINK],
       klasses: [...baseKlass, KLASS.DECODER],
-      caps,
+      decodingCaps,
       allowedPlugins: allowedDecoders,
     });
 
     if (decoders.length <= 0) {
-      debug(
-        `Cannot found decoders for codec ${mimetype} - ${JSON.stringify(caps)}`,
-      );
+      debug(`Cannot found decoders for codec ${mimetype} - %O`, decodingCaps);
       return false;
     }
 

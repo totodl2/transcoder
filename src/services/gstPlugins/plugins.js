@@ -16,6 +16,7 @@ const KLASS_SUBTITLE = 'subtitle';
 
 const systemPluginsList = gst.getPlugins();
 const systemPlugins = systemPluginsList.map(plugin => gst.inspect(plugin));
+
 const systemFeatures = systemPlugins.reduce(
   (prev, { features: featuresList = [], ...plugin }) => [
     ...prev,

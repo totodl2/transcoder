@@ -1,0 +1,125 @@
+{
+  "constraints": {
+    "audio": {
+      "parsers": [],
+      "decoders": []
+    },
+    "video": {
+      "parsers": [],
+      "decoders": []
+    },
+    "demuxers": []
+  },
+  "presets": {
+    "480": {
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvvidconv"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw(memory:NVMM)",
+            "props": { "height": 480, "format": "NV12" }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvv4l2h264enc",
+            "props": {
+              "bitrate": 256,
+              "bitrateUnit": "Kb"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ]
+    },
+    "720": {
+      "minHeight": 720,
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvvidconv"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw(memory:NVMM)",
+            "props": { "height": 720, "format": "NV12" }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvv4l2h264enc",
+            "props": {
+              "bitrate": 512,
+              "bitrateUnit": "Kb"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ]
+    },
+    "1080": {
+      "minHeight": 1080,
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvvidconv"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw(memory:NVMM)",
+            "props": { "height": 1080, "format": "NV12" }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvv4l2h264enc",
+            "props": {
+              "bitrate": 1024,
+              "bitrateUnit": "Kb"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ]
+    }
+  }
+}

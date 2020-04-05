@@ -1,17 +1,16 @@
 const createPipeline = require('./createPipeline');
-const util = require('util');
 const media = require('../../test_assets/media2');
 const conf = require('../../test_assets/config');
 
 describe('createPipeline', () => {
-  it('ok', () => {
+  it.only('create pipe', () => {
     const pp = createPipeline({
       filepath: '/transco/mm.mkv',
-      outputDir: '/transco/test',
+      output: '/transco/test',
       media,
       conf,
     });
-    console.log(JSON.stringify(pp.asArray()));
-    console.log(pp.asArray().join(' '));
+    expect(pp.pipeline.asArray()).toMatchSnapshot();
+    expect(pp.output).toMatchSnapshot();
   });
 });

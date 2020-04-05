@@ -5,3 +5,5 @@ output.json
 features.json
 src/commands/tt.js
 .idea
+.data
+.env

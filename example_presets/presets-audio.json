@@ -1,0 +1,155 @@
+{
+  "constraints": {
+    "audio": {
+      "parsers": [],
+      "decoders": []
+    },
+    "video": {
+      "parsers": [],
+      "decoders": []
+    },
+    "demuxers": []
+  },
+  "subtitles": {
+    "accept": "text/x-raw",
+    "filename": "sub-%i.srt",
+    "encoder": {
+      "instance": "srtenc"
+    }
+  },
+  "presets": {
+    "480": {
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "audio-480.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
+      },
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 64000,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "aacparse" }
+        }
+      ]
+    },
+    "720": {
+      "minHeight": 720,
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "audio-720.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
+      },
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 94208,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "aacparse"
+          }
+        }
+      ]
+    },
+    "1080": {
+      "minHeight": 1080,
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "audio-1080.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
+      },
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 131072,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "aacparse" }
+        }
+      ]
+    }
+  }
+}

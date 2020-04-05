@@ -10,17 +10,11 @@
     },
     "demuxers": []
   },
-  "subtitles": {
-    "accept": "text/x-raw",
-    "encoder": {
-      "instance": "webvttenc"
-    }
-  },
   "presets": {
     "480": {
       "muxer": {
         "type": "mp4mux",
-        "filename": "480.mp4",
+        "filename": "video-480.mp4",
         "params": {
           "fragment-duration": 10
         }
@@ -46,21 +40,10 @@
           }
         },
         {
-          "max": 2,
           "instance": "element",
           "params": {
-            "type": "nvh264enc",
-            "props": {
-              "preset": 2,
-              "bitrate": 256,
-              "bitrateUnit": "Kb",
-              "gop-size": 50
-            }
-          },
-          "fallback": {
             "type": "x264enc",
             "props": {
-              "bframes": 50,
               "bitrate": 256,
               "bitrateUnit": "Kb",
               "speed-preset": 7
@@ -70,33 +53,16 @@
         {
           "instance": "element",
           "params": {
-            "type": "h264parse",
-            "props": {
-              "pts-interpolation": true
-            }
-          }
-        }
-      ],
-      "audio": [
-        {
-          "instance": "element",
-          "params": {
-            "type": "audioconvert"
+            "type": "h264parse"
           }
         },
         {
           "instance": "caps",
           "params": {
-            "type": "audio/x-raw",
-            "props": { "channels": 2 }
-          }
-        },
-        {
-          "instance": "element",
-          "params": {
-            "type": "faac",
+            "type": "video/x-h264",
             "props": {
-              "bitrate": 64
+              "stream-format": "avc",
+              "alignment": "au"
             }
           }
         }
@@ -106,7 +72,7 @@
       "minHeight": 720,
       "muxer": {
         "type": "mp4mux",
-        "filename": "720.mp4",
+        "filename": "video-720.mp4",
         "params": {
           "fragment-duration": 10
         }
@@ -132,21 +98,10 @@
           }
         },
         {
-          "max": 2,
           "instance": "element",
           "params": {
-            "type": "nvh264enc",
-            "props": {
-              "preset": 2,
-              "bitrate": 512,
-              "bitrateUnit": "Kb",
-              "gop-size": 50
-            }
-          },
-          "fallback": {
             "type": "x264enc",
             "props": {
-              "bframes": 50,
               "bitrate": 512,
               "bitrateUnit": "Kb",
               "speed-preset": 7
@@ -156,33 +111,16 @@
         {
           "instance": "element",
           "params": {
-            "type": "h264parse",
-            "props": {
-              "pts-interpolation": true
-            }
-          }
-        }
-      ],
-      "audio": [
-        {
-          "instance": "element",
-          "params": {
-            "type": "audioconvert"
+            "type": "h264parse"
           }
         },
         {
           "instance": "caps",
           "params": {
-            "type": "audio/x-raw",
-            "props": { "channels": 2 }
-          }
-        },
-        {
-          "instance": "element",
-          "params": {
-            "type": "faac",
+            "type": "video/x-h264",
             "props": {
-              "bitrate": 92
+              "stream-format": "avc",
+              "alignment": "au"
             }
           }
         }
@@ -192,7 +130,7 @@
       "minHeight": 1080,
       "muxer": {
         "type": "mp4mux",
-        "filename": "1080.mp4",
+        "filename": "video-1080.mp4",
         "params": {
           "fragment-duration": 10
         }
@@ -218,21 +156,10 @@
           }
         },
         {
-          "max": 2,
           "instance": "element",
           "params": {
-            "type": "nvh264enc",
-            "props": {
-              "preset": 2,
-              "bitrate": 1024,
-              "bitrateUnit": "Kb",
-              "gop-size": 50
-            }
-          },
-          "fallback": {
             "type": "x264enc",
             "props": {
-              "bframes": 50,
               "bitrate": 1024,
               "bitrateUnit": "Kb",
               "speed-preset": 7
@@ -242,33 +169,16 @@
         {
           "instance": "element",
           "params": {
-            "type": "h264parse",
-            "props": {
-              "pts-interpolation": true
-            }
-          }
-        }
-      ],
-      "audio": [
-        {
-          "instance": "element",
-          "params": {
-            "type": "audioconvert"
+            "type": "h264parse"
           }
         },
         {
           "instance": "caps",
           "params": {
-            "type": "audio/x-raw",
-            "props": { "channels": 2 }
-          }
-        },
-        {
-          "instance": "element",
-          "params": {
-            "type": "faac",
+            "type": "video/x-h264",
             "props": {
-              "bitrate": 128
+              "stream-format": "avc",
+              "alignment": "au"
             }
           }
         }
