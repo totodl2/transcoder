@@ -11,6 +11,9 @@ const canTranscode = require('../../services/canTranscode');
 const createPipeline = require('../../services/createPipeline');
 const presets = require('../../presets');
 
+// 10m job timeout
+const TIMEOUT = 10 * 60 * 1000;
+
 module.exports = async job => {
   const {
     data: { id, media: mediaUrl, output: outputLocation, end: endLocation },
@@ -37,6 +40,7 @@ module.exports = async job => {
   debug(pipeline.asArray().join(' '));
 
   let transcoOutput = null;
+  let lastSeen = Date.now();
   try {
     transcoOutput = await new Promise((resolve, reject) => {
       const process = pipeline.execute({ debug: true, args: ['-t'] });
@@ -45,8 +49,9 @@ module.exports = async job => {
       let stdout = '';
 
       const watchStatus = setInterval(async () => {
+        const now = Date.now();
         cancelled = await isCancelled(id);
-        if (cancelled) {
+        if (cancelled || now > lastSeen + TIMEOUT) {
           debug('Cancelled %o', id);
           process.kill('SIGKILL');
         }
@@ -57,6 +62,7 @@ module.exports = async job => {
       });
 
       process.stdout.on('data', async data => {
+        lastSeen = Date.now();
         const sData = data.toString();
         const match = sData.match(/.* \(\s*([0-9.]+)\s*%\)/im);
         if (match) {
@@ -71,12 +77,15 @@ module.exports = async job => {
         debug('Process exited with code %o (killed %o)', code, process.killed);
 
         if (code !== 0 || process.killed) {
+          const now = Date.now();
           reject(
-            new Error(
-              `${
-                cancelled ? 'Job cancelled' : ''
-              }\nstderr: ${stderr}\nstdout:${stdout}`,
-            ),
+            new Error(`
+              ${cancelled ? 'Job cancelled' : ''}
+              Now: ${now}, lastSeen: ${lastSeen}, diff: ${now - lastSeen}
+              Command: ${pipeline.asArray().join(' ')}
+              stderr: ${stderr}
+              stdout: ${stdout}
+            `),
           );
           return;
         }
@@ -105,5 +114,9 @@ module.exports = async job => {
     });
   }
 
-  return transcoOutput;
+  return `${pipeline.asArray().join(' ')}\n${transcoOutput}\n${JSON.stringify(
+    output,
+    null,
+    2,
+  )}`;
 };

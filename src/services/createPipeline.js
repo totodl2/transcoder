@@ -135,6 +135,31 @@ const createPipeline = ({
     ),
   ];
 
+  const positions = {
+    [TYPES.AUDIO]: 0,
+    [TYPES.VIDEO]: 0,
+    [TYPES.SUBTITLES]: 0,
+  };
+
+  // reorder stream to be iso with container order
+  // eslint-disable-next-line no-param-reassign
+  topology.streams = topology.streams
+    .map(stream => {
+      const streamIdMatches = stream.streamId.match(/([0-9]+):([0-9]+)$/);
+      if (streamIdMatches) {
+        return {
+          ...stream,
+          id: parseInt(`${streamIdMatches[1]}${streamIdMatches[2]}`, 10),
+        };
+      }
+      return stream;
+    })
+    .sort((a, b) => a.id - b.id)
+    .map(stream => ({
+      ...stream,
+      position: positions[stream.type]++,
+    }));
+
   for (let i = 0, subOffset = 0, sz = topology.streams.length; i < sz; i++) {
     const stream = topology.streams[i];
     const { type, codec, streamId } = stream;
@@ -164,7 +189,7 @@ const createPipeline = ({
       outputResult.subtitles.push(data);
 
       main
-        .fork(main.link('demuxer'))
+        .fork(main.link('demuxer', `subtitle_${stream.position}`))
         .next(gst.element(subtitles.encoder.instance, subtitles.encoder.params))
         .next(gst.element('queue', queueConf))
         .next(
@@ -187,7 +212,7 @@ const createPipeline = ({
     const { parser, decoder } = avDecoders.streams[streamId];
     const teeName = `${type}_${i}`;
     const decodingPipe = main
-      .fork(main.link('demuxer'))
+      .fork(main.link('demuxer', `${stream.type}_${stream.position}`))
       .next(gst.element(parser.name))
       .next(gst.element('queue', queueConf))
       .next(gst.element(decoder.name))

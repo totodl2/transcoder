@@ -13,4 +13,5 @@ app
   .use(authenticated)
   .use(router.routes());
 
+app.proxy = process.env.PROXIED && !!parseInt(process.env.PROXIED, 10);
 module.exports = app;

@@ -1,4 +1,4 @@
-FROM node:10.19-buster as build-stage
+FROM node:10.19-buster
 
 ENV VERSION 1.16.2
 
@@ -80,7 +80,7 @@ RUN cd gstreamer-${VERSION} && \
     rm -rf gstreamer &&  \
     apt-get clean
 
-
+ARG VERSION
 ENV NODE_ENV production
 ENV PORT 3000
 
