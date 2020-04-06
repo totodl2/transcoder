@@ -19,6 +19,7 @@ docker:
   services:
     - docker:dind
   script:
+    - apk update && (which curl || apk add curl)
     - docker pull $CI_REGISTRY_IMAGE/amd64:$LATEST_IMAGE_TAG
     - docker build --cache-from=$CI_REGISTRY_IMAGE/amd64:$LATEST_IMAGE_TAG --build-arg VERSION=$RELEASE -t $CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG .
     - docker tag $CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG $CI_REGISTRY_IMAGE/amd64:$LATEST_IMAGE_TAG
