@@ -40,4 +40,4 @@ test:
     - docker:dind
   script:
     - export TEST_IMAGE=$CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG
-    - docker run --rm -e NODE_ENV=development --entrypoint "bash" $TEST_IMAGE -c "npm run lint && npm run test"
+    - docker run --rm -e NODE_ENV=development --entrypoint "bash" $TEST_IMAGE -c "npm i && npm run lint && npm run test"
