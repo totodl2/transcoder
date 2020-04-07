@@ -43,7 +43,7 @@ module.exports = async job => {
   let lastSeen = Date.now();
   try {
     transcoOutput = await new Promise((resolve, reject) => {
-      const process = pipeline.execute({ debug: true, args: ['-t'] });
+      const process = pipeline.execute({ debug: true, args: ['-e', '-t'] });
       let stderr = '';
       let cancelled = false;
       let stdout = '';

@@ -64,7 +64,7 @@ module.exports = (topology, constraints = {}) => {
       mimetype,
       directions: [DIRECTIONS.SINK],
       klasses: [...baseKlass, KLASS.DECODER],
-      decodingCaps,
+      caps: decodingCaps,
       allowedPlugins: allowedDecoders,
     });
 

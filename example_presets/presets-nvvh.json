@@ -6,14 +6,18 @@
     },
     "video": {
       "parsers": [],
-      "decoders": [ "nvv4l2decoder" ]
+      "decoders": [ "nvvideo4linux2" ]
     },
     "demuxers": []
   },
   "presets": {
     "320": {
       "muxer": {
-        "type": "mp4mux"
+        "type": "mp4mux",
+        "filename": "video-320.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
       },
       "video": [
         {
@@ -47,12 +51,26 @@
           "params": {
             "type": "h264parse"
           }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-h264",
+            "props": {
+              "stream-format": "avc",
+              "alignment": "au"
+            }
+          }
         }
       ]
     },
     "480": {
       "muxer": {
-        "type": "mp4mux"
+        "type": "mp4mux",
+        "filename": "video-480.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
       },
       "video": [
         {
@@ -86,13 +104,27 @@
           "params": {
             "type": "h264parse"
           }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-h264",
+            "props": {
+              "stream-format": "avc",
+              "alignment": "au"
+            }
+          }
         }
       ]
     },
     "720": {
       "minHeight": 720,
       "muxer": {
-        "type": "mp4mux"
+        "type": "mp4mux",
+        "filename": "video-720.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
       },
       "video": [
         {
@@ -126,13 +158,27 @@
           "params": {
             "type": "h264parse"
           }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-h264",
+            "props": {
+              "stream-format": "avc",
+              "alignment": "au"
+            }
+          }
         }
       ]
     },
     "1080": {
       "minHeight": 1080,
       "muxer": {
-        "type": "mp4mux"
+        "type": "mp4mux",
+        "filename": "video-1080.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
       },
       "video": [
         {
@@ -165,6 +211,16 @@
           "instance": "element",
           "params": {
             "type": "h264parse"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-h264",
+            "props": {
+              "stream-format": "avc",
+              "alignment": "au"
+            }
           }
         }
       ]

@@ -1,4 +1,5 @@
-const gst = require('node-gstreamer-tools');
+// eslint-disable-next-line import/no-unresolved
+const { systemPlugins, systemFeatures } = require('./cache.json');
 
 const DIRECTION_SRC = 1;
 const DIRECTION_SINK = 2;
@@ -13,21 +14,6 @@ const KLASS_CODEC = 'codec';
 const KLASS_VIDEO = 'video';
 const KLASS_AUDIO = 'audio';
 const KLASS_SUBTITLE = 'subtitle';
-
-const systemPluginsList = gst.getPlugins();
-const systemPlugins = systemPluginsList.map(plugin => gst.inspect(plugin));
-
-const systemFeatures = systemPlugins.reduce(
-  (prev, { features: featuresList = [], ...plugin }) => [
-    ...prev,
-    ...featuresList.map(({ klass, ...feature }) => ({
-      klass: (klass || '').toLowerCase().split('/'),
-      ...feature,
-      plugin,
-    })),
-  ],
-  [],
-);
 
 module.exports = {
   systemPlugins,

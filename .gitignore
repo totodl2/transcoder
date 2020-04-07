@@ -4,6 +4,7 @@ node_modules
 output.json
 features.json
 src/commands/tt.js
+src/services/gstPlugins/cache.json
 .idea
 .data
 .env

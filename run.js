@@ -1,8 +1,12 @@
 require('dotenv').config();
 require('./src/sentry');
+
+const { exec: oldExec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const util = require('util');
 
+const exec = util.promisify(oldExec);
 const { argv } = process;
 
 function help() {
@@ -28,9 +32,13 @@ if (!fs.existsSync(commandFile)) {
   help();
 }
 
-/* eslint-disable-next-line */
-const command = require(commandFile);
-command()
+(async function() {
+  await exec(`node "${path.join(__dirname, 'warmup.js')}"`);
+
+  /* eslint-disable-next-line */
+  const command = require(commandFile);
+  return command();
+})()
   .catch(e => {
     console.log(e); // eslint-disable-line
     process.exit(1);
