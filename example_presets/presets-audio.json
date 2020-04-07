@@ -18,6 +18,49 @@
     }
   },
   "presets": {
+    "320": {
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "audio-320.mp4",
+        "params": {
+          "fragment-duration": 10
+        }
+      },
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 64000,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "aacparse" }
+        }
+      ]
+    },
     "480": {
       "muxer": {
         "type": "mp4mux",
@@ -49,7 +92,7 @@
           "params": {
             "type": "faac",
             "props": {
-              "bitrate": 64000,
+              "bitrate": 92000,
               "bitrateUnit": "b",
               "rate-control": 2
             }
@@ -93,7 +136,7 @@
           "params": {
             "type": "faac",
             "props": {
-              "bitrate": 94208,
+              "bitrate": 128000,
               "bitrateUnit": "b",
               "rate-control": 2
             }
@@ -139,7 +182,7 @@
           "params": {
             "type": "faac",
             "props": {
-              "bitrate": 131072,
+              "bitrate": 160000,
               "bitrateUnit": "b",
               "rate-control": 2
             }

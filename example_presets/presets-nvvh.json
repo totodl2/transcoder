@@ -6,11 +6,50 @@
     },
     "video": {
       "parsers": [],
-      "decoders": []
+      "decoders": [ "nvv4l2decoder" ]
     },
     "demuxers": []
   },
   "presets": {
+    "320": {
+      "muxer": {
+        "type": "mp4mux"
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvvidconv"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw(memory:NVMM)",
+            "props": { "height": 320, "format": "NV12" }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "nvv4l2h264enc",
+            "props": {
+              "bitrate": 256000,
+              "bitrateUnit": "b",
+              "control-rate": 0,
+              "profile": 4,
+              "preset-level": 4
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ]
+    },
     "480": {
       "muxer": {
         "type": "mp4mux"
@@ -34,8 +73,11 @@
           "params": {
             "type": "nvv4l2h264enc",
             "props": {
-              "bitrate": 256,
-              "bitrateUnit": "Kb"
+              "bitrate": 416000,
+              "bitrateUnit": "b",
+              "control-rate": 0,
+              "profile": 4,
+              "preset-level": 4
             }
           }
         },
@@ -71,8 +113,11 @@
           "params": {
             "type": "nvv4l2h264enc",
             "props": {
-              "bitrate": 512,
-              "bitrateUnit": "Kb"
+              "bitrate": 896000,
+              "bitrateUnit": "b",
+              "control-rate": 0,
+              "profile": 4,
+              "preset-level": 4
             }
           }
         },
@@ -108,8 +153,11 @@
           "params": {
             "type": "nvv4l2h264enc",
             "props": {
-              "bitrate": 1024,
-              "bitrateUnit": "Kb"
+              "bitrate": 1888000,
+              "bitrateUnit": "b",
+              "control-rate": 0,
+              "profile": 4,
+              "preset-level": 4
             }
           }
         },

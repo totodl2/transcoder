@@ -21,11 +21,18 @@ router.post(
     }),
   ),
   async ctx => {
+    let media = null;
     try {
-      const media = await gst.discover(ctx.request.body.media);
+      media = await gst.discover(ctx.request.body.media);
       ctx.body = canTranscode(media.topology, presets.constraints);
     } catch (e) {
-      Sentry.captureException(e);
+      Sentry.withScope(scope => {
+        scope.addEventProcessor(event =>
+          Sentry.Handlers.parseRequest(event, ctx.request),
+        );
+        Sentry.setExtra('media', media);
+        Sentry.captureException(e);
+      });
       ctx.body = false;
     }
   },
