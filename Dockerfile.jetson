@@ -1,4 +1,4 @@
-FROM gitlab.webini.fr:8444/totodl/nvidia/arm64/node:10.19.0
+FROM gitlab.webini.fr:8444/totodl/nvidia/arm64/node:10.19.0-0
 
 ARG VERSION
 ENV NODE_ENV production
