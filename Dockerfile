@@ -25,7 +25,7 @@ RUN echo "deb http://ftp.fr.debian.org/debian/ buster contrib non-free" >> /etc/
                        libfreetype6-dev libsdl1.2-dev libvdpau-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev texinfo zlib1g-dev \
                        libfdk-aac-dev libfftw3-dev libpostproc-dev libopenjp2-7-dev libavfilter-dev libvo-aacenc-dev \
                        libfontconfig-dev frei0r-plugins-dev libavresample-dev libssl-dev gettext libde265-dev libsrtp2-dev \
-                       libvo-aacenc-dev git x265 x264
+                       libvo-aacenc-dev patch x265 x264
 
 RUN curl -o gstreamer-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${VERSION}.tar.xz && \
     curl -o gst-plugins-base-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-${VERSION}.tar.xz && \
@@ -63,7 +63,7 @@ RUN cd gstreamer-${VERSION} && \
     make && \
     make install && \
     cd ../gst-plugins-bad-${VERSION} && \
-    git apply ../patch.diff && \
+    patch ext/curl/gstcurlbasesink.c < ../patch.diff && \
     ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
     make && \
     make install && \
