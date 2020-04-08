@@ -1,6 +1,6 @@
 FROM node:10.19-buster
 
-ENV GST_GST_VERSION 1.16.2
+ENV GST_VERSION 1.16.2
 
 WORKDIR /tmp/gstreamer
 
