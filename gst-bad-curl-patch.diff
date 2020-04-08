@@ -1,0 +1,39 @@
+diff --git a/ext/curl/gstcurlbasesink.c b/ext/curl/gstcurlbasesink.c
+index 5a790e1..ff3d3dd 100644
+--- a/ext/curl/gstcurlbasesink.c
++++ b/ext/curl/gstcurlbasesink.c
+@@ -919,6 +919,7 @@ handle_transfer (GstCurlBaseSink * sink)
+   gint activated_fds;
+   gint running_handles;
+   gint timeout;
++  curl_off_t namelookup_time;
+   CURLMcode m_code;
+   CURLcode e_code;
+
+@@ -931,9 +932,25 @@ handle_transfer (GstCurlBaseSink * sink)
+   /* Receiving CURLM_CALL_MULTI_PERFORM means that libcurl may have more data
+      available to send or receive - call simply curl_multi_perform before
+      poll() on more actions */
++//  do {
++//    m_code = curl_multi_perform (sink->multi_handle, &running_handles);
++//  } while (m_code == CURLM_CALL_MULTI_PERFORM);
++  namelookup_time = 0;
+   do {
+     m_code = curl_multi_perform (sink->multi_handle, &running_handles);
+-  } while (m_code == CURLM_CALL_MULTI_PERFORM);
++    if (m_code == CURLM_OK) {
++      m_code =
++          curl_easy_getinfo (sink->curl, CURLINFO_NAMELOOKUP_TIME,
++          &namelookup_time);
++    }
++    if (m_code != CURLM_OK) {
++      sink->error = g_strdup_printf ("failed to open connection: %s",
++          curl_multi_strerror (m_code));
++      retval = GST_FLOW_ERROR;
++      goto fail;
++    }
++  } while (m_code == CURLM_CALL_MULTI_PERFORM || !namelookup_time);
++
+   GST_DEBUG_OBJECT (sink, "running handles: %d", running_handles);
+
+   while (running_handles && (m_code == CURLM_OK)) {

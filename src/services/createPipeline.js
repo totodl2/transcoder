@@ -46,6 +46,15 @@ const createElement = (stream, element, counters) => {
       ? gstElement.prop('height')
       : get(gstElement.prop('height'), '[0]');
 
+  if (
+    element.removeIfStreamHeight &&
+    stream.height &&
+    // eslint-disable-next-line eqeqeq
+    stream.height == element.removeIfHeight
+  ) {
+    return null;
+  }
+
   // resize
   if (presetHeight && stream.width && stream.height) {
     const ratio = stream.width / stream.height;
@@ -232,7 +241,10 @@ const createPipeline = ({
         .next(gst.element('queue', queueConf));
 
       preset[type].forEach(element => {
-        encodingPipe.next(createElement(stream, element, counters));
+        const gstElement = createElement(stream, element, counters);
+        if (gstElement) {
+          encodingPipe.next(gstElement);
+        }
       });
 
       encodingPipe

@@ -6,8 +6,21 @@ ENV PORT 3000
 ENV VERSION=$VERSION
 
 RUN apt-get update && apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-tools \
-    gstreamer1.0-libav gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly build-essential && \
-    adduser node video
+    gstreamer1.0-libav gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly build-essential && \
+    adduser node video git && apt remove --purge -y gstreamer1.0-plugins-bad && apt-get clean
+
+ENV GS_OUT_PATH /usr/
+
+COPY gst-bad-curl-patch.diff ./patch.diff
+RUN curl -o gstreamer-*.tar.xz https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-`gst-launch-1.0 --version | xargs -n 1 | tail -n 2 | head -n 1`.tar.xz && \
+    cd gstreamer* && \
+    git apply ../patch.diff && \
+    ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
+    make && \
+    make install && \
+    cp /usr/lib/gstreamer-1.0/libgst* /usr/lib/aarch64-linux-gnu/gstreamer-1.0/ && \
+    cd ../ && \
+    rm -rf gstreamer*
 
 COPY --chown=node:node "." "/home/node/server"
 
