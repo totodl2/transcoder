@@ -25,7 +25,8 @@ docker:
     - docker tag $CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG $CI_REGISTRY_IMAGE/amd64:$LATEST_IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE/amd64:$LATEST_IMAGE_TAG
-    - docker build -f ./Dockerfile.jetson --build-arg VERSION=$RELEASE -t $CI_REGISTRY_IMAGE/jetson:$IMAGE_TAG .
+      - docker pull $CI_REGISTRY_IMAGE/jetson:$LATEST_IMAGE_TAG
+    - docker build --cache-from=$CI_REGISTRY_IMAGE/jetson:$LATEST_IMAGE_TAG -f ./Dockerfile.jetson --build-arg VERSION=$RELEASE -t $CI_REGISTRY_IMAGE/jetson:$IMAGE_TAG .
     - docker tag $CI_REGISTRY_IMAGE/jetson:$IMAGE_TAG $CI_REGISTRY_IMAGE/jetson:$LATEST_IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE/jetson:$IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE/jetson:$LATEST_IMAGE_TAG
@@ -40,4 +41,4 @@ test:
     - docker:dind
   script:
     - export TEST_IMAGE=$CI_REGISTRY_IMAGE/amd64:$IMAGE_TAG
-    - docker run --rm -e NODE_ENV=development --entrypoint "bash" $TEST_IMAGE -c "npm i && npm run lint && npm run test"
+    - docker run --rm -e NODE_ENV=development --entrypoint "bash" $TEST_IMAGE -c "npm i && node warmup && npm run lint && npm run test"
