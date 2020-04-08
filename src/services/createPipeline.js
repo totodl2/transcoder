@@ -50,7 +50,7 @@ const createElement = (stream, element, counters) => {
     element.removeIfStreamHeight &&
     stream.height &&
     // eslint-disable-next-line eqeqeq
-    stream.height == element.removeIfHeight
+    stream.height == element.removeIfStreamHeight
   ) {
     return null;
   }
