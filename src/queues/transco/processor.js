@@ -11,8 +11,8 @@ const canTranscode = require('../../services/canTranscode');
 const createPipeline = require('../../services/createPipeline');
 const presets = require('../../presets');
 
-// 10m job timeout
-const TIMEOUT = 10 * 60 * 1000;
+// 5m job timeout
+const TIMEOUT = 5 * 60 * 1000;
 
 module.exports = async job => {
   const {

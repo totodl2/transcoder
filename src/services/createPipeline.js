@@ -158,7 +158,7 @@ const createPipeline = ({
       if (streamIdMatches) {
         return {
           ...stream,
-          id: parseInt(`${streamIdMatches[1]}${streamIdMatches[2]}`, 10),
+          id: parseInt(streamIdMatches[1] || 0, 10),
         };
       }
       return stream;
