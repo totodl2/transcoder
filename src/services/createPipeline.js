@@ -59,7 +59,7 @@ const createElement = (stream, element, counters) => {
   if (presetHeight && stream.width && stream.height) {
     const ratio = stream.width / stream.height;
     const newWidth = Math.floor(presetHeight * ratio);
-    gstElement.prop('width', newWidth % 2 === 1 ? newWidth + 1 : newWidth);
+    gstElement.prop('width', newWidth % 2 === 1 ? newWidth - 1 : newWidth);
   }
 
   set(counters, params.type, get(counters, params.type, 0) + 1);
