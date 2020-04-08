@@ -1,6 +1,6 @@
 FROM node:10.19-buster
 
-ENV VERSION 1.16.2
+ENV GST_GST_VERSION 1.16.2
 
 WORKDIR /tmp/gstreamer
 
@@ -27,21 +27,21 @@ RUN echo "deb http://ftp.fr.debian.org/debian/ buster contrib non-free" >> /etc/
                        libfontconfig-dev frei0r-plugins-dev libavresample-dev libssl-dev gettext libde265-dev libsrtp2-dev \
                        libvo-aacenc-dev patch x265 x264
 
-RUN curl -o gstreamer-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${VERSION}.tar.xz && \
-    curl -o gst-plugins-base-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-${VERSION}.tar.xz && \
-    curl -o gst-plugins-good-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-${VERSION}.tar.xz && \
-    curl -o gst-plugins-bad-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${VERSION}.tar.xz && \
-    curl -o gst-plugins-ugly-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-${VERSION}.tar.xz && \
-    curl -o gst-libav-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${VERSION}.tar.xz && \
-    curl -o gstreamer-vaapi-${VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-${VERSION}.tar.xz
+RUN curl -o gstreamer-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${GST_VERSION}.tar.xz && \
+    curl -o gst-plugins-base-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-${GST_VERSION}.tar.xz && \
+    curl -o gst-plugins-good-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-${GST_VERSION}.tar.xz && \
+    curl -o gst-plugins-bad-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${GST_VERSION}.tar.xz && \
+    curl -o gst-plugins-ugly-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-${GST_VERSION}.tar.xz && \
+    curl -o gst-libav-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${GST_VERSION}.tar.xz && \
+    curl -o gstreamer-vaapi-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-${GST_VERSION}.tar.xz
 
-RUN tar -xJf gstreamer-${VERSION}.tar.xz && \
-    tar -xJf gst-plugins-base-${VERSION}.tar.xz && \
-    tar -xJf gst-plugins-good-${VERSION}.tar.xz && \
-    tar -xJf gst-plugins-bad-${VERSION}.tar.xz && \
-    tar -xJf gst-plugins-ugly-${VERSION}.tar.xz && \
-    tar -xJf gst-libav-${VERSION}.tar.xz && \
-    tar -xJf gstreamer-vaapi-${VERSION}.tar.xz && \
+RUN tar -xJf gstreamer-${GST_VERSION}.tar.xz && \
+    tar -xJf gst-plugins-base-${GST_VERSION}.tar.xz && \
+    tar -xJf gst-plugins-good-${GST_VERSION}.tar.xz && \
+    tar -xJf gst-plugins-bad-${GST_VERSION}.tar.xz && \
+    tar -xJf gst-plugins-ugly-${GST_VERSION}.tar.xz && \
+    tar -xJf gst-libav-${GST_VERSION}.tar.xz && \
+    tar -xJf gstreamer-vaapi-${GST_VERSION}.tar.xz && \
     rm *.tar.xz
 
 ENV PKG_CONFIG_PATH /usr/lib/pkgconfig
@@ -50,32 +50,32 @@ ENV GS_OUT_PATH /usr/
 COPY gst-bad-curl-patch.diff ./patch.diff
 
 # build gstreamer
-RUN cd gstreamer-${VERSION} && \
+RUN cd gstreamer-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
-    cd ../gst-plugins-base-${VERSION} && \
+    cd ../gst-plugins-base-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
-    cd ../gst-plugins-good-${VERSION} && \
+    cd ../gst-plugins-good-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
-    cd ../gst-plugins-bad-${VERSION} && \
+    cd ../gst-plugins-bad-${GST_VERSION} && \
     patch ext/curl/gstcurlbasesink.c < ../patch.diff && \
     ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
     make && \
     make install && \
-    cd ../gst-plugins-ugly-${VERSION} && \
+    cd ../gst-plugins-ugly-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
-    cd ../gst-libav-${VERSION} && \
+    cd ../gst-libav-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
-    cd ../gstreamer-vaapi-${VERSION} && \
+    cd ../gstreamer-vaapi-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make && \
     make install && \
