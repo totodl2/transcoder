@@ -107,6 +107,7 @@ module.exports = async job => {
     await axios({
       method: 'POST',
       timeout: 120000,
+      maxBodyLength: 15 * 1000 * 1000, // 15mo
       url: `${endLocation}${
         endLocation.indexOf('?') !== -1 ? '&' : '?'
       }cancelled=${cancelled ? 1 : 0}`,
