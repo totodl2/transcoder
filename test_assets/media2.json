@@ -91,6 +91,48 @@
         "maxBitrate": 0
       },
       {
+        "type": "audio",
+        "codec": {
+          "type": "audio/x-eac3",
+          "framed": true,
+          "channels": 6,
+          "rate": 48000
+        },
+        "streamId": null,
+        "language": null,
+        "channels": 6,
+        "sampleRate": 48000,
+        "depth": 0,
+        "bitrate": 0,
+        "maxBitrate": 0,
+        "streams": [
+          {
+            "type": "audio",
+            "codec": {
+              "type": "audio/x-eac3",
+              "framed": true,
+              "rate": 48000,
+              "channels": 6,
+              "alignment": "frame"
+            },
+            "tags": {
+              "container format": "Matroska",
+              "audio codec": "E-AC-3 audio",
+              "language code": "en",
+              "bitrate": 640000,
+              "extended comment": "DURATION=01:58:49.152000000"
+            },
+            "streamId": "f62009232fb68521d84eb5330db393394d0814835d092a6d18dd762e20c14b2c/002:11509176981843794534",
+            "language": "fr",
+            "channels": 6,
+            "sampleRate": 48000,
+            "depth": 32,
+            "bitrate": 0,
+            "maxBitrate": 0
+          }
+        ]
+      },
+      {
         "type": "video",
         "codec": {
           "type": "video/x-h264",

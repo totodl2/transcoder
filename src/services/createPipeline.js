@@ -13,6 +13,27 @@ const queueConf = {
   // 'max-size-time': 0,
 };
 
+// const flattenStreams = streams => {
+//   const output = [];
+//   for (let i = 0, sz = streams.length; i < sz; i++) {
+//     const { streams: subStreams, ...stream } = streams[i];
+//     if (subStreams) {
+//       output.push(...flattenStreams(subStreams));
+//     }
+//     output.push(stream);
+//   }
+//   return output;
+// };
+
+const removeBuffer = data =>
+  Object.entries(data).reduce((prev, [key, value]) => {
+    if (!Buffer.isBuffer(get(value, 'buf')) && !Buffer.isBuffer(value)) {
+      // eslint-disable-next-line no-param-reassign
+      prev[key] = value;
+    }
+    return prev;
+  }, {});
+
 const createElement = (stream, element, counters) => {
   const seen = get(counters, element.params.type, 0);
   const max = get(element, 'max', null);
@@ -102,6 +123,33 @@ const createPipeline = ({
   const main = gst.pipeline(
     gst.element(isHttp ? 'souphttpsrc' : 'filesrc', { location: filepath }),
   );
+  const positions = {
+    [TYPES.AUDIO]: 0,
+    [TYPES.VIDEO]: 0,
+    [TYPES.SUBTITLES]: 0,
+  };
+
+  // removed streams without id
+  // reorder stream to be iso with container order
+  // eslint-disable-next-line no-param-reassign
+  topology.streams = (topology.streams || [])
+    .filter(s => !!s.streamId)
+    .map(stream => {
+      const streamIdMatches = stream.streamId.match(/([0-9]+):([0-9]+)$/);
+      if (streamIdMatches) {
+        return {
+          ...stream,
+          id: parseInt(streamIdMatches[1] || 0, 10),
+        };
+      }
+      return stream;
+    })
+    .sort((a, b) => a.id - b.id)
+    .map(stream => ({
+      ...stream,
+      position: positions[stream.type]++,
+    }));
+
   const avDecoders = getAVDecodingElements(topology, constraints);
 
   if (avDecoders === false) {
@@ -155,31 +203,6 @@ const createPipeline = ({
     ),
   ];
 
-  const positions = {
-    [TYPES.AUDIO]: 0,
-    [TYPES.VIDEO]: 0,
-    [TYPES.SUBTITLES]: 0,
-  };
-
-  // reorder stream to be iso with container order
-  // eslint-disable-next-line no-param-reassign
-  topology.streams = topology.streams
-    .map(stream => {
-      const streamIdMatches = stream.streamId.match(/([0-9]+):([0-9]+)$/);
-      if (streamIdMatches) {
-        return {
-          ...stream,
-          id: parseInt(streamIdMatches[1] || 0, 10),
-        };
-      }
-      return stream;
-    })
-    .sort((a, b) => a.id - b.id)
-    .map(stream => ({
-      ...stream,
-      position: positions[stream.type]++,
-    }));
-
   for (let i = 0, subOffset = 0, sz = topology.streams.length; i < sz; i++) {
     const stream = topology.streams[i];
     const { type, codec, streamId } = stream;
@@ -219,7 +242,10 @@ const createPipeline = ({
           }),
         );
 
-      data.stream = stream;
+      data.stream = {
+        ...stream,
+        tags: removeBuffer(stream.tags || {}),
+      };
       // eslint-disable-next-line no-continue
       continue;
     }
@@ -246,7 +272,10 @@ const createPipeline = ({
 
     // eslint-disable-next-line no-loop-func
     availablePresets.forEach(preset => {
-      outputResult[preset.name].streams.push(stream);
+      outputResult[preset.name].streams.push({
+        ...stream,
+        tags: removeBuffer(stream.tags || {}),
+      });
       const encodingPipe = main
         .fork(decodingPipe.link(teeName))
         .next(gst.element('queue', queueConf));
