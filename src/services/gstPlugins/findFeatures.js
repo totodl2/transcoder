@@ -60,11 +60,19 @@ const findFeaturesFor = (
           return false;
         }
 
-        return (
-          (includesAnyPads && pad.any) ||
-          (!!pad.capabilities[mimetype] &&
-            validateCapabilities(pad.capabilities[mimetype], caps))
-        );
+        if (includesAnyPads && pad.any) {
+          return true;
+        }
+
+        const capsFound = (pad.capabilities || []).findIndex(ccaps => {
+          if (ccaps.mimetype.toLowerCase() !== mimetype) {
+            return false;
+          }
+
+          return validateCapabilities(ccaps, caps);
+        });
+
+        return capsFound !== -1;
       });
     })
     .sort(rankSort);

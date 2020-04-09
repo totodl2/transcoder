@@ -18,12 +18,18 @@ describe('plugins', () => {
       pads: [
         {
           direction: 2,
-          capabilities: {
-            'video/x-msvideo': {
+          capabilities: [
+            {
+              mimetype: 'video/x-msvideo',
               features: ['memory:SystemMemory'],
               mpegversion: 2,
             },
-          },
+            {
+              mimetype: 'video/x-msvideo',
+              features: ['memory:SystemMemory'],
+              mpegversion: 3,
+            },
+          ],
           any: true,
         },
       ],
@@ -43,12 +49,13 @@ describe('plugins', () => {
       pads: [
         {
           direction: 2,
-          capabilities: {
-            'video/x-msvideo': {
+          capabilities: [
+            {
+              mimetype: 'video/x-msvideo',
               features: ['memory:SystemMemory'],
               mpegversion: [1, 2, 4],
             },
-          },
+          ],
           any: false,
         },
       ],
@@ -97,5 +104,14 @@ describe('plugins', () => {
     );
     expect(results.length).toEqual(1);
     expect(results[0].name).toEqual('test');
+  });
+
+  it('should find plugin with defined caps if the plugin provide multiple times mimetype definition', () => {
+    const results = findFeatures(
+      { mimetype: 'video/x-msvideo', caps: { mpegversion: 3 } },
+      features,
+    );
+    expect(results.length).toEqual(1);
+    expect(results[0].name).toEqual('test1');
   });
 });
