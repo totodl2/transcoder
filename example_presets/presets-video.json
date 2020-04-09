@@ -69,6 +69,8 @@
       ]
     },
     "480": {
+      "minHeight": 1080,
+      "minWidth": 853,
       "muxer": {
         "type": "mp4mux",
         "filename": "video-480.mp4",
@@ -127,6 +129,7 @@
     },
     "720": {
       "minHeight": 720,
+      "minWidth": 1280,
       "muxer": {
         "type": "mp4mux",
         "filename": "video-720.mp4",
@@ -185,6 +188,7 @@
     },
     "1080": {
       "minHeight": 1080,
+      "minWidth": 1920,
       "muxer": {
         "type": "mp4mux",
         "filename": "video-1080.mp4",

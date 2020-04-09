@@ -41,10 +41,15 @@ const createElement = (stream, element, counters) => {
     }
   }
 
-  const presetHeight =
+  let presetHeight =
     element.instance === 'element'
       ? gstElement.prop('height')
       : get(gstElement.prop('height'), '[0]');
+
+  if (presetHeight && stream.height && stream.height < presetHeight) {
+    presetHeight = stream.height;
+    gstElement.prop('height', presetHeight);
+  }
 
   if (
     element.removeIfStreamHeight &&
@@ -56,9 +61,14 @@ const createElement = (stream, element, counters) => {
   }
 
   // resize
-  if (presetHeight && stream.width && stream.height) {
+  if (
+    presetHeight &&
+    stream.width &&
+    stream.height &&
+    stream.height >= presetHeight
+  ) {
     const ratio = stream.width / stream.height;
-    const newWidth = Math.floor(presetHeight * ratio);
+    const newWidth = Math.round(presetHeight * ratio);
     gstElement.prop('width', newWidth % 2 === 1 ? newWidth - 1 : newWidth);
   }
 
@@ -74,8 +84,9 @@ const getAvailablePresets = (topology, presets) => {
   return Object.entries(presets)
     .filter(
       ([, preset]) =>
-        preset.minHeight === undefined ||
-        videoStream.height >= preset.minHeight,
+        (preset.minHeight === undefined && preset.minWidth === undefined) ||
+        videoStream.height >= preset.minHeight ||
+        (preset.minWidth !== undefined && videoStream.width >= preset.minWidth),
     )
     .map(([name, preset]) => ({ ...preset, name }));
 };

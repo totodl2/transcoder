@@ -104,6 +104,7 @@
     },
     "720": {
       "minHeight": 720,
+      "minWidth": 1280,
       "muxer": {
         "type": "mp4mux",
         "filename": "720.mp4",
@@ -190,6 +191,7 @@
     },
     "1080": {
       "minHeight": 1080,
+      "minWidth": 1920,
       "muxer": {
         "type": "mp4mux",
         "filename": "1080.mp4",
