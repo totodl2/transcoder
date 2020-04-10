@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const get = require('lodash.get');
 const Joi = require('@hapi/joi');
 const gst = require('node-gstreamer-tools');
 const Sentry = require('@sentry/node');
@@ -10,6 +11,13 @@ const presets = require('../presets');
 const status = require('../services/workerStatus');
 
 const router = new Router();
+
+const removeBuffer = (key, value) => {
+  if (get(value, 'type') === 'Buffer' && Array.isArray(get(value, 'data'))) {
+    return null;
+  }
+  return value;
+};
 
 router.post(
   '/support',
@@ -58,9 +66,36 @@ router.put(
   ),
   async ctx => {
     const { body } = ctx.request;
-    await status.setWaiting(body.id);
-    await queue.add(body);
-    ctx.body = true;
+    let media = null;
+    try {
+      media = await gst.discover(body.media);
+      if (!canTranscode(media.topology, presets.constraints)) {
+        ctx.body = false;
+        return;
+      }
+
+      await status.setWaiting(body.id);
+      await queue.add(
+        JSON.parse(
+          JSON.stringify(
+            {
+              ...body,
+              discovered: media,
+            },
+            removeBuffer,
+          ),
+        ),
+      );
+    } catch (e) {
+      Sentry.withScope(scope => {
+        scope.addEventProcessor(event =>
+          Sentry.Handlers.parseRequest(event, ctx.request),
+        );
+        Sentry.setExtra('media', media);
+        Sentry.captureException(e);
+      });
+      ctx.body = false;
+    }
   },
 );
 

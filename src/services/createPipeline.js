@@ -25,15 +25,6 @@ const queueConf = {
 //   return output;
 // };
 
-const removeBuffer = data =>
-  Object.entries(data).reduce((prev, [key, value]) => {
-    if (!Buffer.isBuffer(get(value, 'buf')) && !Buffer.isBuffer(value)) {
-      // eslint-disable-next-line no-param-reassign
-      prev[key] = value;
-    }
-    return prev;
-  }, {});
-
 const createElement = (stream, element, counters) => {
   const seen = get(counters, element.params.type, 0);
   const max = get(element, 'max', null);
@@ -245,7 +236,7 @@ const createPipeline = ({
 
       data.stream = {
         ...stream,
-        tags: removeBuffer(stream.tags || {}),
+        tags: stream.tags || {},
       };
       // eslint-disable-next-line no-continue
       continue;
@@ -275,7 +266,7 @@ const createPipeline = ({
     availablePresets.forEach(preset => {
       outputResult[preset.name].streams.push({
         ...stream,
-        tags: removeBuffer(stream.tags || {}),
+        tags: stream.tags || {},
       });
       const encodingPipe = main
         .fork(decodingPipe.link(teeName))

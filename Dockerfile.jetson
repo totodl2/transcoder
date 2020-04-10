@@ -23,9 +23,7 @@ RUN export GST_VERSION=`gst-launch-1.0 --version | xargs -n 1 | tail -n 2 | head
     cd ../ && \
     rm -rf gst*
 
-RUN mkdir -p /usr/local/gstreamer-nvidia && \
-    mv /usr/lib/aarch64-linux-gnu/gstreamer-1.0/deepstream /usr/local/lib/gstreamer-nvidia && \
-    mv /usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstnv* /usr/local/lib/gstreamer-nvidia
+RUN cp -sp /usr/lib/aarch64-linux-gnu/gstreamer-1.0 /usr/local/lib/gstreamer-nvidia
 
 ARG VERSION
 ENV VERSION=$VERSION
