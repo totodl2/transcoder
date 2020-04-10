@@ -86,6 +86,8 @@ router.put(
           ),
         ),
       );
+
+      ctx.body = true;
     } catch (e) {
       Sentry.withScope(scope => {
         scope.addEventProcessor(event =>
