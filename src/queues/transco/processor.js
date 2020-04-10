@@ -1,5 +1,6 @@
 const gst = require('node-gstreamer-tools');
 const axios = require('axios');
+const Sentry = require('@sentry/node');
 
 const debug = require('../../debug')('transco');
 const {
@@ -18,106 +19,119 @@ module.exports = async job => {
   const {
     data: { id, media: mediaUrl, output: outputLocation, end: endLocation },
   } = job;
+  let media = null;
 
-  if (await isCancelled(id)) {
-    return 'Cancelled';
-  }
-
-  await setActive(id);
-
-  const media = await gst.discover(mediaUrl);
-  if (!canTranscode(media.topology, presets.constraints)) {
-    return 'Unsupported media';
-  }
-
-  const { pipeline, output } = createPipeline({
-    filepath: mediaUrl,
-    output: outputLocation,
-    media,
-    conf: presets,
-  });
-
-  debug(pipeline.asArray().join(' '));
-
-  let transcoOutput = null;
-  let lastSeen = Date.now();
   try {
-    transcoOutput = await new Promise((resolve, reject) => {
-      const process = pipeline.execute({ debug: true, args: ['-e', '-t'] });
-      let stderr = '';
-      let cancelled = false;
-      let stdout = '';
+    if (await isCancelled(id)) {
+      return 'Cancelled';
+    }
 
-      const watchStatus = setInterval(async () => {
-        const now = Date.now();
-        cancelled = await isCancelled(id);
-        if (cancelled || now > lastSeen + TIMEOUT) {
-          debug('Cancelled %o', id);
-          process.kill('SIGKILL');
-        }
-      }, 1000);
+    await setActive(id);
 
-      process.stderr.on('data', data => {
-        stderr += data.toString();
-      });
+    media = await gst.discover(mediaUrl);
+    if (!canTranscode(media.topology, presets.constraints)) {
+      return 'Unsupported media';
+    }
 
-      process.stdout.on('data', async data => {
-        lastSeen = Date.now();
-        const sData = data.toString();
-        const match = sData.match(/.* \(\s*([0-9.]+)\s*%\)/im);
-        if (match) {
-          job.progress(parseInt(match[1], 10));
-        } else {
-          stdout += sData;
-        }
-      });
+    const { pipeline, output } = createPipeline({
+      filepath: mediaUrl,
+      output: outputLocation,
+      media,
+      conf: presets,
+    });
 
-      process.on('close', code => {
-        clearInterval(watchStatus);
-        debug('Process exited with code %o (killed %o)', code, process.killed);
+    debug(pipeline.asArray().join(' '));
 
-        if (code !== 0 || process.killed) {
+    let transcoOutput = null;
+    let lastSeen = Date.now();
+    try {
+      transcoOutput = await new Promise((resolve, reject) => {
+        const process = pipeline.execute({ debug: true, args: ['-e', '-t'] });
+        let stderr = '';
+        let cancelled = false;
+        let stdout = '';
+
+        const watchStatus = setInterval(async () => {
           const now = Date.now();
-          reject(
-            new Error(`
+          cancelled = await isCancelled(id);
+          if (cancelled || now > lastSeen + TIMEOUT) {
+            debug('Cancelled %o', id);
+            process.kill('SIGKILL');
+          }
+        }, 1000);
+
+        process.stderr.on('data', data => {
+          stderr += data.toString();
+        });
+
+        process.stdout.on('data', async data => {
+          lastSeen = Date.now();
+          const sData = data.toString();
+          const match = sData.match(/.* \(\s*([0-9.]+)\s*%\)/im);
+          if (match) {
+            job.progress(parseInt(match[1], 10));
+          } else {
+            stdout += sData;
+          }
+        });
+
+        process.on('close', code => {
+          clearInterval(watchStatus);
+          debug(
+            'Process exited with code %o (killed %o)',
+            code,
+            process.killed,
+          );
+
+          if (code !== 0 || process.killed) {
+            const now = Date.now();
+            reject(
+              new Error(`
               ${cancelled ? 'Job cancelled' : ''}
               Now: ${now}, lastSeen: ${lastSeen}, diff: ${now - lastSeen}
               Command: ${pipeline.asArray().join(' ')}
               stderr: ${stderr}
               stdout: ${stdout}
             `),
-          );
-          return;
-        }
+            );
+            return;
+          }
 
-        resolve(stdout);
+          resolve(stdout);
+        });
       });
-    });
-  } catch (e) {
-    if (!(await isCancelled(id))) {
-      throw e;
+    } catch (e) {
+      if (!(await isCancelled(id))) {
+        throw e;
+      }
+      transcoOutput = e.message;
     }
-    transcoOutput = e.message;
-  }
 
-  const cancelled = await isCancelled(id);
-  await remove(id);
+    const cancelled = await isCancelled(id);
+    await remove(id);
 
-  if (endLocation) {
-    await axios({
-      method: 'POST',
-      timeout: 120000,
-      maxBodyLength: 15 * 1000 * 1000, // 15mo
-      url: `${endLocation}${
-        endLocation.indexOf('?') !== -1 ? '&' : '?'
-      }cancelled=${cancelled ? 1 : 0}`,
-      data: output,
+    if (endLocation) {
+      await axios({
+        method: 'POST',
+        timeout: 120000,
+        maxBodyLength: 15 * 1000 * 1000, // 15mo
+        url: `${endLocation}${
+          endLocation.indexOf('?') !== -1 ? '&' : '?'
+        }cancelled=${cancelled ? 1 : 0}`,
+        data: output,
+      });
+    }
+
+    return `${pipeline.asArray().join(' ')}\n${transcoOutput}\n${JSON.stringify(
+      output,
+      null,
+      2,
+    )}`;
+  } catch (e) {
+    Sentry.withScope(() => {
+      Sentry.setExtra('media', media);
+      Sentry.captureException(e);
     });
+    throw e;
   }
-
-  return `${pipeline.asArray().join(' ')}\n${transcoOutput}\n${JSON.stringify(
-    output,
-    null,
-    2,
-  )}`;
 };
