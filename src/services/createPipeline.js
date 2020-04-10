@@ -72,6 +72,7 @@ const createElement = (stream, element, counters) => {
     gstElement.prop('height', presetHeight);
   }
 
+  // @todo checker le bitrate et ne pas l'appliquer si le bitrate du media est < au bitrate du preset
   if (
     element.removeIfStreamHeight &&
     stream.height &&
