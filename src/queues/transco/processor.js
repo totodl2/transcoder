@@ -1,4 +1,3 @@
-const gst = require('node-gstreamer-tools');
 const axios = require('axios');
 
 const debug = require('../../debug')('transco');
@@ -7,7 +6,6 @@ const {
   isCancelled,
   remove,
 } = require('../../services/workerStatus');
-const canTranscode = require('../../services/canTranscode');
 const createPipeline = require('../../services/createPipeline');
 const presets = require('../../presets');
 
