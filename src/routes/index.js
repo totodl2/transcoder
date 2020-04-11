@@ -31,7 +31,7 @@ router.post(
   async ctx => {
     let media = null;
     try {
-      media = await gst.discover(ctx.request.body.media);
+      media = await gst.discover(ctx.request.body.media, 50);
       ctx.body = canTranscode(media.topology, presets.constraints);
     } catch (e) {
       Sentry.withScope(scope => {

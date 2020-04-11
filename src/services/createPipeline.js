@@ -127,7 +127,7 @@ const createPipeline = ({
   topology.streams = (topology.streams || [])
     .filter(s => !!s.streamId)
     .map(stream => {
-      const streamIdMatches = stream.streamId.match(/([0-9]+):([0-9]+)$/);
+      const streamIdMatches = stream.streamId.match(/([0-9]{3})(:([0-9]+))?$/);
       if (streamIdMatches) {
         return {
           ...stream,
@@ -223,8 +223,18 @@ const createPipeline = ({
       }
       outputResult.subtitles.push(data);
 
-      main
-        .fork(main.link('demuxer', `subtitle_${stream.position}`))
+      const subpipe = main.fork(
+        main.link('demuxer', `subtitle_${stream.position}`),
+      );
+
+      if (
+        codec.type === 'application/x-ssa' ||
+        codec.type === 'application/x-ass'
+      ) {
+        subpipe.next(gst.element('queue')).next(gst.element('ssaparse'));
+      }
+
+      subpipe
         .next(gst.element(subtitles.encoder.instance, subtitles.encoder.params))
         .next(gst.element('queue', queueConf))
         .next(
