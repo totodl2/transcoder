@@ -19,8 +19,10 @@ module.exports = async job => {
       media: mediaUrl,
       output: outputLocation,
       end: endLocation,
+      progress: progressLocation,
       discovered: media,
     },
+    id: jobId,
   } = job;
 
   if (await isCancelled(id)) {
@@ -66,6 +68,20 @@ module.exports = async job => {
         const match = sData.match(/.* \(\s*([0-9.]+)\s*%\)/im);
         if (match) {
           job.progress(parseInt(match[1], 10));
+          if (!progressLocation) {
+            return;
+          }
+
+          await axios({
+            method: 'POST',
+            timeout: 5000,
+            url: progressLocation,
+            data: {
+              status: 'progress',
+              job: jobId,
+              progress: parseFloat(match[1]),
+            },
+          });
         } else {
           stdout += sData;
         }

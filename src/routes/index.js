@@ -62,6 +62,7 @@ router.put(
       end: Joi.string()
         .uri({ scheme: ['http', 'https'] })
         .required(),
+      progress: Joi.string().uri({ scheme: ['http', 'https'] }),
     }),
   ),
   async ctx => {

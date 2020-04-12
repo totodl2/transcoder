@@ -1,4 +1,5 @@
 const status = require('../../services/workerStatus');
+const axios = require('axios');
 
 module.exports = {
   removed: async job => {
@@ -7,5 +8,25 @@ module.exports = {
     } = job;
 
     await status.remove(id);
+  },
+  failed: async job => {
+    const {
+      data: { progress },
+      id: jobId,
+    } = job;
+
+    if (!progress) {
+      return;
+    }
+
+    await axios({
+      method: 'POST',
+      timeout: 30000,
+      url: progress,
+      data: {
+        status: 'failed',
+        job: jobId,
+      },
+    });
   },
 };
