@@ -1,5 +1,5 @@
-const status = require('../../services/workerStatus');
 const axios = require('axios');
+const status = require('../../services/workerStatus');
 
 module.exports = {
   removed: async job => {
