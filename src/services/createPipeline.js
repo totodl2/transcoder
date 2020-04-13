@@ -10,7 +10,7 @@ const getAVDecodingElements = require('./getAVDecodingElements');
 
 const queueConf = {
   // 'max-size-bytes': 512000000,
-  // 'max-size-time': 0,
+  'max-size-time': 5000000000,
 };
 
 // const flattenStreams = streams => {
@@ -231,7 +231,9 @@ const createPipeline = ({
         codec.type === 'application/x-ssa' ||
         codec.type === 'application/x-ass'
       ) {
-        subpipe.next(gst.element('queue')).next(gst.element('ssaparse'));
+        subpipe
+          .next(gst.element('queue', queueConf))
+          .next(gst.element('ssaparse'));
       }
 
       subpipe
