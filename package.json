@@ -21,8 +21,8 @@
     "type": "git",
     "url": "ssh://git@gitlab.webini.fr:22122/totodl/transcoder.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "GASPARINI Nicolas",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
