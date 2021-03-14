@@ -72,3 +72,46 @@ You can import api definition (`<rootDir>/insomnia/transcoder.yml`) with [insomn
 | SENTRY_ENV | dev | Sentry env |
 | ALLOW_QUERY_FILE_PATH | | Set value to 1 if you want to allow filepath in api queries |
 | STORAGE_PATH | .data | Docker volumes path |
+
+## Preset file
+
+| Key | Type | Required | Description |
+| --- | --- | --- | --- |
+| constraints | object | n | Plugins whitelist section |
+| constraints.audio | object | n | Plugins whitelist for audio |
+| constraints.audio.parsers | string[] | n | Parsers whitelist for audio (unused if empty) |
+| constraints.audio.decoders | string[] | n | Decoders whitelist for audio (unused if empty) |
+| constraints.video | object | n | Plugins whitelist for video |
+| constraints.video.parsers | string[] | n | Parsers whitelist for video (unused if empty) |
+| constraints.video.decoders | string[] | n | Decoders whitelist for video (unused if empty) |
+| constraints.demuxers | string[] | n | Demuxers whitelist |
+| subtitles | object | n | Subtitles section (/!\ this feature has his decoding pipeline mostly hardcoded and can have hazardous behavior) |
+| subtitles.accept | regex | y | Accepted subtitles mimetype |
+| subtitles.filename | string | n | Output filename, `%i` will be remplaced by the stream offset |
+| subtitles.encoder | object | y | Subtitles encoder section |
+| subtitles.encoder.instance | string | y | Subtitle element name |
+| subtitles.encoder.params | string | n | Subtitle element props |
+| presets | object | y | Presets section |
+| presets.\<name> | object | y | Preset section, you can use whatever you want as <name> | 
+| presets.\<name>.minHeight | int | n | Min media height for this preset, it the original media is lower than this height, the preset will be ignored except if media's width is greater than minWidth |
+| presets.\<name>.minWidth | int | n | Min media width for this preset, it the original media is lower than this width, the preset will be ignored except if media's height is greater than minHeight |
+| presets.\<name>.muxer | object | y | Muxer section |
+| presets.\<name>.muxer.type | string | y | Muxer element name |
+| presets.\<name>.muxer.filename | string | y | Output filename |
+| presets.\<name>.muxer.params | object | n | Muxer element properties, ex : `{ "streamable": true }` |
+| presets.\<name>.video | array | n | Video pipeline |
+| presets.\<name>.video[X] | object | n | Element / Caps definition |
+| presets.\<name>.video[X].removeIfStreamHeight | int | n | Remove this element / caps if media's height equals removeIfStreamHeight |
+| presets.\<name>.video[X].instance | string(element,caps) | y | Element type |
+| presets.\<name>.video[X].params | object | y | Element or caps parameters |
+| presets.\<name>.video[X].params.type | string | y | Element or caps type ex: `video/x-raw` or `videoscale` |
+| presets.\<name>.video[X].params.props | object | n | Element or caps properties, ex: `{ "height": 480 }`. `bitrate` property is specific, you must define the unit associated to this value with `bitrateUnit` field. It will be used to keep the original bitrate if media's bitrate is lower than the one you wrote |
+| presets.\<name>.audio | array | n | Audio pipeline |
+| presets.\<name>.audio[X] | object | n | Element / Caps definition |
+| presets.\<name>.audio[X].instance | string(element,caps) | y | Element type |
+| presets.\<name>.audio[X].params | object | y | Element or caps parameters |
+| presets.\<name>.audio[X].params.type | string | y | Element or caps type ex: `audio/x-raw` or `audioconvert` |
+| presets.\<name>.audio[X].params.props | object | n | Element or caps properties, ex: `{ "bitrate": 160000, "bitrateUnit": "b" }`. `bitrate` property is specific, you must define the unit associated to this value with `bitrateUnit` field. It will be used to keep the original bitrate if media's bitrate is lower than the one you wrote |
+
+
+

@@ -98,7 +98,8 @@ const getAvailablePresets = (topology, presets) => {
     .filter(
       ([, preset]) =>
         (preset.minHeight === undefined && preset.minWidth === undefined) ||
-        videoStream.height >= preset.minHeight ||
+        (preset.minHeight !== undefined &&
+          videoStream.height >= preset.minHeight) ||
         (preset.minWidth !== undefined && videoStream.width >= preset.minWidth),
     )
     .map(([name, preset]) => ({ ...preset, name }));

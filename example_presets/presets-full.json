@@ -1,15 +1,4 @@
 {
-  "constraints": {
-    "audio": {
-      "parsers": [],
-      "decoders": []
-    },
-    "video": {
-      "parsers": [],
-      "decoders": []
-    },
-    "demuxers": []
-  },
   "subtitles": {
     "accept": "text/x-raw",
     "encoder": {
