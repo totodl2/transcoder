@@ -1,3 +1,5 @@
 const warmPluginCache = require('./src/services/gstPlugins/warmPluginsCache');
 
-warmPluginCache();
+if (warmPluginCache(process.argv.includes('--force'))) {
+  console.log('Plugins cache generated');
+}

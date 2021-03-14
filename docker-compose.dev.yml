@@ -14,8 +14,9 @@ services:
       NODE_ENV: development
     volumes:
       - ./:/home/node/server
+      - ${STORAGE_PATH}/virtual_storage:/home/node/virtual_storage
     ports:
-      - 4000:3000
+      - 4000:${PORT}
     entrypoint: 'node'
     command: ['node_modules/.bin/nodemon', 'run.js', 'server']
 
@@ -26,14 +27,14 @@ services:
       - redis
     environment:
       REDIS_HOST: redis.host
-      ARENA_PORT: 3000
       ARENA_HOST: 0.0.0.0
     ports:
-      - 4001:3000
+      - 4001:${ARENA_PORT}
     links:
       - redis:redis.host
     volumes:
       - ./:/home/node/server
+      - ${STORAGE_PATH}/virtual_storage:/home/node/virtual_storage
     command: ['arena']
 
   transco-worker:
@@ -42,11 +43,13 @@ services:
       - redis
     links:
       - redis:redis.host
+      - echo:echo.host
     environment:
       REDIS_HOST: redis.host
       NODE_ENV: development
     volumes:
       - ./:/home/node/server
+      - ${STORAGE_PATH}/virtual_storage:/home/node/virtual_storage
     entrypoint: 'node'
     command: ['node_modules/.bin/nodemon', 'run.js', 'worker']
 
@@ -55,3 +58,9 @@ services:
     volumes:
       - ${STORAGE_PATH}/redis:/data
     command: redis-server --appendonly yes
+
+  echo:
+    image: mendhak/http-https-echo:18
+    environment:
+      HTTP_PORT: 80
+      HTTPS_PORT: 443

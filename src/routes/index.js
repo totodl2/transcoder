@@ -10,6 +10,7 @@ const canTranscode = require('../services/canTranscode');
 const presets = require('../presets');
 const status = require('../services/workerStatus');
 
+const allowFilePath = process.env.ALLOW_QUERY_FILE_PATH === '1';
 const router = new Router();
 
 const removeBuffer = (key, value) => {
@@ -19,19 +20,23 @@ const removeBuffer = (key, value) => {
   return value;
 };
 
+const mediaValidator = allowFilePath
+  ? Joi.string()
+  : Joi.string().uri({ scheme: ['http', 'https'] });
+
 router.post(
   '/support',
   joi(
     Joi.object({
-      media: Joi.string()
-        .uri({ scheme: ['http', 'https'] })
-        .required(),
+      media: mediaValidator.required(),
     }),
   ),
   async ctx => {
     let media = null;
     try {
-      media = await gst.discover(ctx.request.body.media, 50);
+      const filepath = ctx.request.body.media;
+      const isHttp = filepath.substr(0, 4).toLowerCase() === 'http';
+      media = await gst.discover(`${!isHttp ? 'file://' : ''}${filepath}`, 50);
       ctx.body = canTranscode(media.topology, presets.constraints);
     } catch (e) {
       Sentry.withScope(scope => {
@@ -53,15 +58,9 @@ router.put(
       id: Joi.alternatives()
         .try(Joi.number(), Joi.string())
         .required(),
-      media: Joi.string()
-        .uri({ scheme: ['http', 'https'] })
-        .required(),
-      output: Joi.string()
-        .uri({ scheme: ['http', 'https'] })
-        .required(),
-      end: Joi.string()
-        .uri({ scheme: ['http', 'https'] })
-        .required(),
+      media: mediaValidator.required(),
+      output: mediaValidator.required(),
+      end: Joi.string().uri({ scheme: ['http', 'https'] }),
       progress: Joi.string().uri({ scheme: ['http', 'https'] }),
     }),
   ),
@@ -69,7 +68,8 @@ router.put(
     const { body } = ctx.request;
     let media = null;
     try {
-      media = await gst.discover(body.media);
+      const isHttp = body.media.substr(0, 4).toLowerCase() === 'http';
+      media = await gst.discover(`${!isHttp ? 'file://' : ''}${body.media}`);
       if (!canTranscode(media.topology, presets.constraints)) {
         ctx.body = false;
         return;

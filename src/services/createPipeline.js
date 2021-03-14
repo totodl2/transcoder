@@ -111,9 +111,12 @@ const createPipeline = ({
   conf: { constraints, presets, subtitles },
 }) => {
   const outputResult = {};
-  const isHttp = output.substr(0, 4).toLowerCase() === 'http';
+  const isInputHttp = filepath.substr(0, 4).toLowerCase() === 'http';
+  const isOutputHttp = output.substr(0, 4).toLowerCase() === 'http';
   const main = gst.pipeline(
-    gst.element(isHttp ? 'souphttpsrc' : 'filesrc', { location: filepath }),
+    gst.element(isInputHttp ? 'souphttpsrc' : 'filesrc', {
+      location: filepath,
+    }),
   );
   const positions = {
     [TYPES.AUDIO]: 0,
@@ -158,7 +161,7 @@ const createPipeline = ({
         preset: name,
         name: muxer.filename || name,
       };
-      data.location = isHttp
+      data.location = isOutputHttp
         ? `${output}${
             output.indexOf('?') !== -1 ? '&' : '?'
           }${querystring.stringify(data)}`
@@ -173,9 +176,9 @@ const createPipeline = ({
           }),
         )
         .next(
-          gst.element(isHttp ? 'curlhttpsink' : 'filesink', {
+          gst.element(isOutputHttp ? 'curlhttpsink' : 'filesink', {
             location: data.location,
-            ...(isHttp ? { sync: false } : {}),
+            ...(isOutputHttp ? { sync: false } : {}),
           }),
         );
 
@@ -212,7 +215,7 @@ const createPipeline = ({
           ? subtitles.filename.replace('%i', subOffset++)
           : `sub-${subOffset++}`,
       };
-      data.location = isHttp
+      data.location = isOutputHttp
         ? `${output}${
             output.indexOf('?') !== -1 ? '&' : '?'
           }${querystring.stringify(data)}`
@@ -240,9 +243,9 @@ const createPipeline = ({
         .next(gst.element(subtitles.encoder.instance, subtitles.encoder.params))
         .next(gst.element('queue', queueConf))
         .next(
-          gst.element(isHttp ? 'curlhttpsink' : 'filesink', {
+          gst.element(isOutputHttp ? 'curlhttpsink' : 'filesink', {
             location: data.location,
-            ...(isHttp ? { sync: false } : {}),
+            ...(isOutputHttp ? { sync: false } : {}),
           }),
         );
 

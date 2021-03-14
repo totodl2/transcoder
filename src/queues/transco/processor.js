@@ -1,4 +1,5 @@
 const axios = require('axios');
+const fs = require('fs');
 
 const debug = require('../../debug')('transco');
 const {
@@ -38,10 +39,16 @@ module.exports = async job => {
     conf: presets,
   });
 
+  const isHttpOutput = outputLocation.substr(0, 4).toLowerCase() === 'http';
+  if (!isHttpOutput) {
+    fs.mkdirSync(outputLocation, { recursive: true });
+  }
+
   debug(pipeline.asArray().join(' '));
 
   let transcoOutput = null;
   let lastSeen = Date.now();
+
   try {
     transcoOutput = await new Promise((resolve, reject) => {
       const process = pipeline.execute({ debug: true, args: ['-e', '-t'] });

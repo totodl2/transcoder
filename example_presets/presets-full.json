@@ -1,0 +1,252 @@
+{
+  "constraints": {
+    "audio": {
+      "parsers": [],
+      "decoders": []
+    },
+    "video": {
+      "parsers": [],
+      "decoders": []
+    },
+    "demuxers": []
+  },
+  "subtitles": {
+    "accept": "text/x-raw",
+    "encoder": {
+      "instance": "webvttenc"
+    }
+  },
+  "presets": {
+    "480": {
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "480.mp4",
+        "params": {}
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": { "height": 480 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "x264enc",
+            "props": {
+              "bitrate": 416,
+              "bitrateUnit": "Kb",
+              "speed-preset": "slow"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 64000,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        }
+      ]
+    },
+    "720": {
+      "minHeight": 720,
+      "minWidth": 1280,
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "720.mp4",
+        "params": {}
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": { "height": 720 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "x264enc",
+            "props": {
+              "bitrate": 896,
+              "bitrateUnit": "Kb",
+              "speed-preset": "slow"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 96000,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        }
+      ]
+    },
+    "1080": {
+      "minHeight": 1080,
+      "minWidth": 1920,
+      "muxer": {
+        "type": "mp4mux",
+        "filename": "1080.mp4",
+        "params": {}
+      },
+      "video": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "videoscale"
+          }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "video/x-raw",
+            "props": {
+              "height": 1080
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "x264enc",
+            "props": {
+              "bitrate": 1600,
+              "bitrateUnit": "Kb",
+              "speed-preset": "slow"
+            }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "h264parse"
+          }
+        }
+      ],
+      "audio": [
+        {
+          "instance": "element",
+          "params": {
+            "type": "audioconvert"
+          }
+        },
+        {
+          "instance": "element",
+          "params": { "type": "audioresample" }
+        },
+        {
+          "instance": "caps",
+          "params": {
+            "type": "audio/x-raw",
+            "props": { "rate": 44100, "channels": 2 }
+          }
+        },
+        {
+          "instance": "element",
+          "params": {
+            "type": "faac",
+            "props": {
+              "bitrate": 128000,
+              "bitrateUnit": "b",
+              "rate-control": 2
+            }
+          }
+        }
+      ]
+    }
+  }
+}

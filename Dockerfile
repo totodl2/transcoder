@@ -1,5 +1,6 @@
 FROM node:10.19-buster
 
+ARG CORE=8
 ENV GST_VERSION 1.16.2
 
 WORKDIR /tmp/gstreamer
@@ -52,32 +53,32 @@ COPY gst-bad-curl-patch.diff ./patch.diff
 # build gstreamer
 RUN cd gstreamer-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gst-plugins-base-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gst-plugins-good-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gst-plugins-bad-${GST_VERSION} && \
     patch ext/curl/gstcurlbasesink.c < ../patch.diff && \
     ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gst-plugins-ugly-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gst-libav-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../gstreamer-vaapi-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
-    make && \
+    make -j $CORES && \
     make install && \
     cd ../../ && \
     rm -rf gstreamer &&  \

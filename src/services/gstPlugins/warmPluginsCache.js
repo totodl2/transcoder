@@ -12,7 +12,7 @@ const cacheFile = path.join(__dirname, './cache.json');
 
 module.exports = force => {
   if (fs.existsSync(cacheFile) && !force) {
-    return;
+    return false;
   }
 
   const systemPluginsList = gst.getPlugins();
@@ -38,4 +38,6 @@ module.exports = force => {
     }),
     { encoding: 'UTF-8' },
   );
+
+  return true;
 };
