@@ -10,8 +10,8 @@ const {
 const createPipeline = require('../../services/createPipeline');
 const presets = require('../../presets');
 
-// 5m job timeout
-const TIMEOUT = 5 * 60 * 1000;
+// default 5m job timeout
+const TIMEOUT = process.env.JOB_TIMEOUT || 5 * 60 * 1000;
 
 module.exports = async job => {
   const {

@@ -72,7 +72,8 @@ You can import api definition (`<rootDir>/insomnia/transcoder.yml`) with [insomn
 | SENTRY_ENV | dev | Sentry env |
 | ALLOW_QUERY_FILE_PATH | | Set value to 1 if you want to allow filepath in api queries |
 | STORAGE_PATH | .data | Docker volumes path |
-| DISCOVER_TIMEOUT | 60 | Timeout for discovering media's metadata |
+| DISCOVER_TIMEOUT | 60 | Timeout for discovering media's metadata (in seconds) |
+| JOB_TIMEOUT | 300000 | Job timeout (max duration without progress in ms) |
 
 ## Preset file
 
