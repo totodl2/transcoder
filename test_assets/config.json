@@ -16,6 +16,38 @@
       "instance": "webvttenc"
     }
   },
+  "queueProps": {
+    "max-size-bytes": 512000000
+  },
+  "src": {
+    "http": {
+      "element": "souphttpsrc",
+      "props": {
+        "test-http-src": true
+      }
+    },
+    "file": {
+      "element": "filesrc",
+      "props": {
+        "test-src": true
+      }
+    }
+  },
+  "sink": {
+    "http": {
+      "element": "curlhttpsink",
+      "props": {
+        "sync": false,
+        "test": true
+      }
+    },
+    "file": {
+      "element": "filesink",
+      "props": {
+        "filetest": true
+      }
+    }
+  },
   "presets": {
     "480": {
       "muxer": {

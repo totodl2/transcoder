@@ -8,23 +8,6 @@ const convert = require('convert-units');
 const TYPES = require('./gstPlugins/streamTypes');
 const getAVDecodingElements = require('./getAVDecodingElements');
 
-const queueConf = {
-  // 'max-size-bytes': 512000000,
-  'max-size-time': 5000000000,
-};
-
-// const flattenStreams = streams => {
-//   const output = [];
-//   for (let i = 0, sz = streams.length; i < sz; i++) {
-//     const { streams: subStreams, ...stream } = streams[i];
-//     if (subStreams) {
-//       output.push(...flattenStreams(subStreams));
-//     }
-//     output.push(stream);
-//   }
-//   return output;
-// };
-
 const createElement = (stream, element, counters) => {
   const seen = get(counters, element.params.type, 0);
   const max = get(element, 'max', null);
@@ -109,15 +92,21 @@ const createPipeline = ({
   filepath,
   output,
   media: { topology },
-  conf: { constraints, presets, subtitles },
+  conf: { constraints, presets, subtitles, queueProps = {}, src, sink },
 }) => {
   const outputResult = {};
   const isInputHttp = filepath.substr(0, 4).toLowerCase() === 'http';
   const isOutputHttp = output.substr(0, 4).toLowerCase() === 'http';
   const main = gst.pipeline(
-    gst.element(isInputHttp ? 'souphttpsrc' : 'filesrc', {
-      location: filepath,
-    }),
+    gst.element(
+      isInputHttp
+        ? get(src, 'http.element', 'souphttpsrc')
+        : get(src, 'file.element', 'filesrc'),
+      {
+        ...get(src, `${isInputHttp ? 'http' : 'file'}.props`, {}),
+        location: filepath,
+      },
+    ),
   );
   const positions = {
     [TYPES.AUDIO]: 0,
@@ -177,10 +166,16 @@ const createPipeline = ({
           }),
         )
         .next(
-          gst.element(isOutputHttp ? 'curlhttpsink' : 'filesink', {
-            location: data.location,
-            ...(isOutputHttp ? { sync: false } : {}),
-          }),
+          gst.element(
+            isOutputHttp
+              ? get(sink, 'http.element', 'curlhttpsink')
+              : get(sink, 'file.element', 'filesink'),
+            {
+              ...(isOutputHttp ? { sync: false } : {}),
+              ...get(sink, `${isOutputHttp ? 'http' : 'file'}.props`, {}),
+              location: data.location,
+            },
+          ),
         );
 
       data.streams = [];
@@ -236,18 +231,24 @@ const createPipeline = ({
         codec.type === 'application/x-ass'
       ) {
         subpipe
-          .next(gst.element('queue', queueConf))
+          .next(gst.element('queue', queueProps))
           .next(gst.element('ssaparse'));
       }
 
       subpipe
         .next(gst.element(subtitles.encoder.instance, subtitles.encoder.params))
-        .next(gst.element('queue', queueConf))
+        .next(gst.element('queue', queueProps))
         .next(
-          gst.element(isOutputHttp ? 'curlhttpsink' : 'filesink', {
-            location: data.location,
-            ...(isOutputHttp ? { sync: false } : {}),
-          }),
+          gst.element(
+            isOutputHttp
+              ? get(sink, 'http.element', 'curlhttpsink')
+              : get(sink, 'file.element', 'filesink'),
+            {
+              ...(isOutputHttp ? { sync: false } : {}),
+              ...get(sink, `${isOutputHttp ? 'http' : 'file'}.props`, {}),
+              location: data.location,
+            },
+          ),
         );
 
       data.stream = {
@@ -268,7 +269,7 @@ const createPipeline = ({
     const decodingPipe = main
       .fork(main.link('demuxer', `${stream.type}_${stream.position}`))
       .next(gst.element(parser.name))
-      .next(gst.element('queue', queueConf))
+      .next(gst.element('queue', queueProps))
       .next(gst.element(decoder.name))
       .next(
         gst.element('progressreport', {
@@ -286,7 +287,7 @@ const createPipeline = ({
       });
       const encodingPipe = main
         .fork(decodingPipe.link(teeName))
-        .next(gst.element('queue', queueConf));
+        .next(gst.element('queue', queueProps));
 
       preset[type].forEach(element => {
         const gstElement = createElement(stream, element, counters);
@@ -296,7 +297,7 @@ const createPipeline = ({
       });
 
       encodingPipe
-        .next(gst.element('queue', queueConf))
+        .next(gst.element('queue', queueProps))
         .next(preset.pipeline.link(preset.name));
     });
   }

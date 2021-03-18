@@ -72,6 +72,7 @@ You can import api definition (`<rootDir>/insomnia/transcoder.yml`) with [insomn
 | SENTRY_ENV | dev | Sentry env |
 | ALLOW_QUERY_FILE_PATH | | Set value to 1 if you want to allow filepath in api queries |
 | STORAGE_PATH | .data | Docker volumes path |
+| DISCOVER_TIMEOUT | 60 | Timeout for discovering media's metadata |
 
 ## Preset file
 
@@ -79,12 +80,27 @@ You can import api definition (`<rootDir>/insomnia/transcoder.yml`) with [insomn
 | --- | --- | --- | --- |
 | constraints | object | n | Plugins whitelist section |
 | constraints.audio | object | n | Plugins whitelist for audio |
-| constraints.audio.parsers | string[] | n | Parsers whitelist for audio (unused if empty) |
-| constraints.audio.decoders | string[] | n | Decoders whitelist for audio (unused if empty) |
+| constraints.audio.parsers | string[] | n | Plugins whitelist for audio parsers (unused if empty) |
+| constraints.audio.decoders | string[] | n | Plugins whitelist for audio decoders (unused if empty) |
 | constraints.video | object | n | Plugins whitelist for video |
-| constraints.video.parsers | string[] | n | Parsers whitelist for video (unused if empty) |
-| constraints.video.decoders | string[] | n | Decoders whitelist for video (unused if empty) |
+| constraints.video.parsers | string[] | n | Plugins whitelist for video parsers (unused if empty) |
+| constraints.video.decoders | string[] | n | Plugins whitelist for video decoders (unused if empty) |
 | constraints.demuxers | string[] | n | Demuxers whitelist |
+| queueProps | object | n | Queue element props |
+| src | object | n | Src element section |
+| src.http | object | n | Http src element section |
+| src.http.element | string | n | Element name for http(s) links |
+| src.http.props | object | n | Element props for http(s) links |
+| src.file | object | n | File src element section |
+| src.file.element | string | n | Element name for files |
+| src.file.props | object | n | Element props for files |
+| sink | object | n | Sink element section |
+| sink.http | object | n | Http sink element section |
+| sink.http.element | string | n | Element name |
+| sink.http.props | object | Element props |
+| sink.file | object | n | File sink element section |
+| sink.file.element | string | n | Element name |
+| sink.file.props | object | n | Element props |
 | subtitles | object | n | Subtitles section (/!\ this feature has his decoding pipeline mostly hardcoded and can have hazardous behavior) |
 | subtitles.accept | regex | y | Accepted subtitles mimetype |
 | subtitles.filename | string | n | Output filename, `%i` will be remplaced by the stream offset |

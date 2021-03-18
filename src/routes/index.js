@@ -10,6 +10,7 @@ const canTranscode = require('../services/canTranscode');
 const presets = require('../presets');
 const status = require('../services/workerStatus');
 
+const discoverTimeout = process.env.DISCOVER_TIMEOUT || 60;
 const allowFilePath = process.env.ALLOW_QUERY_FILE_PATH === '1';
 const router = new Router();
 
@@ -36,7 +37,10 @@ router.post(
     try {
       const filepath = ctx.request.body.media;
       const isHttp = filepath.substr(0, 4).toLowerCase() === 'http';
-      media = await gst.discover(`${!isHttp ? 'file://' : ''}${filepath}`, 50);
+      media = await gst.discover(
+        `${!isHttp ? 'file://' : ''}${filepath}`,
+        discoverTimeout,
+      );
       ctx.body = canTranscode(media.topology, presets.constraints);
     } catch (e) {
       Sentry.withScope(scope => {
@@ -44,6 +48,8 @@ router.post(
           Sentry.Handlers.parseRequest(event, ctx.request),
         );
         Sentry.setExtra('media', media);
+        Sentry.setExtra('message', e.message);
+        Sentry.setExtra('stack', e.stack);
         Sentry.captureException(e);
       });
       ctx.body = false;
@@ -69,7 +75,10 @@ router.put(
     let media = null;
     try {
       const isHttp = body.media.substr(0, 4).toLowerCase() === 'http';
-      media = await gst.discover(`${!isHttp ? 'file://' : ''}${body.media}`);
+      media = await gst.discover(
+        `${!isHttp ? 'file://' : ''}${body.media}`,
+        discoverTimeout,
+      );
       if (!canTranscode(media.topology, presets.constraints)) {
         ctx.body = false;
         return;
@@ -95,6 +104,8 @@ router.put(
           Sentry.Handlers.parseRequest(event, ctx.request),
         );
         Sentry.setExtra('media', media);
+        Sentry.setExtra('message', e.message);
+        Sentry.setExtra('stack', e.stack);
         Sentry.captureException(e);
       });
       ctx.body = false;

@@ -10,57 +10,16 @@
     },
     "demuxers": []
   },
+  "queueParams": {
+  },
   "subtitles": {
-    "accept": "text/x-raw",
+    "accept": "(text/x-raw|application/x-ass|application/x-ssa)",
     "filename": "sub-%i.srt",
     "encoder": {
       "instance": "srtenc"
     }
   },
   "presets": {
-    "320": {
-      "muxer": {
-        "type": "mp4mux",
-        "filename": "audio-320.mp4",
-        "params": {
-          "fragment-duration": 10
-        }
-      },
-      "audio": [
-        {
-          "instance": "element",
-          "params": {
-            "type": "audioconvert"
-          }
-        },
-        {
-          "instance": "element",
-          "params": { "type": "audioresample" }
-        },
-        {
-          "instance": "caps",
-          "params": {
-            "type": "audio/x-raw",
-            "props": { "rate": 44100, "channels": 2 }
-          }
-        },
-        {
-          "instance": "element",
-          "params": {
-            "type": "faac",
-            "props": {
-              "bitrate": 64000,
-              "bitrateUnit": "b",
-              "rate-control": 2
-            }
-          }
-        },
-        {
-          "instance": "element",
-          "params": { "type": "aacparse" }
-        }
-      ]
-    },
     "480": {
       "muxer": {
         "type": "mp4mux",
@@ -106,6 +65,7 @@
     },
     "720": {
       "minHeight": 720,
+      "minWidth": 1280,
       "muxer": {
         "type": "mp4mux",
         "filename": "audio-720.mp4",
@@ -152,6 +112,7 @@
     },
     "1080": {
       "minHeight": 1080,
+      "minWidth": 1920,
       "muxer": {
         "type": "mp4mux",
         "filename": "audio-1080.mp4",
