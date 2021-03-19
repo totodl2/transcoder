@@ -31,14 +31,14 @@
     "eslint-plugin-prettier": "^3.1.1",
     "jest": "^25.2.6",
     "lint-staged": "^9.4.2",
-    "nodemon": "^1.19.4",
+    "nodemon": "^2.0.7",
     "pre-commit": "^1.2.2",
     "prettier": "^1.18.2"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@sentry/node": "^5.15.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bull": "^3.13.0",
     "bull-arena": "^2.7.1",
     "convert-units": "^2.3.4",
@@ -50,7 +50,7 @@
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "node-gstreamer-launch": "^0.1.4",
-    "node-gstreamer-tools": "^1.1.1",
+    "node-gstreamer-tools": "^1.1.2",
     "redis": "^3.0.2"
   }
 }
