@@ -44,6 +44,7 @@ router.post(
       ctx.body = canTranscode(media.topology, presets.constraints);
     } catch (e) {
       Sentry.withScope(scope => {
+        console.warn(e);
         scope.addEventProcessor(event =>
           Sentry.Handlers.parseRequest(event, ctx.request),
         );
@@ -100,6 +101,7 @@ router.put(
       ctx.body = true;
     } catch (e) {
       Sentry.withScope(scope => {
+        console.warn(e);
         scope.addEventProcessor(event =>
           Sentry.Handlers.parseRequest(event, ctx.request),
         );
