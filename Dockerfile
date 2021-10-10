@@ -1,12 +1,13 @@
-FROM node:10.19-buster
+FROM node:10.24-buster
 
 ARG CORE=8
-ENV GST_VERSION 1.16.2
+ENV GST_VERSION 1.16.3
 
 WORKDIR /tmp/gstreamer
 
 RUN echo "deb http://ftp.fr.debian.org/debian/ buster contrib non-free" >> /etc/apt/sources.list && \
     apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y build-essential dpkg-dev flex bison autotools-dev automake liborc-dev autopoint libtool \
                        gtk-doc-tools libxv-dev libasound2-dev libtheora-dev libogg-dev libvorbis-dev \
                        libbz2-dev libv4l-dev libvpx-dev libjack-jackd2-dev libsoup2.4-dev libpulse-dev faad libfaad-dev \
@@ -26,7 +27,9 @@ RUN echo "deb http://ftp.fr.debian.org/debian/ buster contrib non-free" >> /etc/
                        libfreetype6-dev libsdl1.2-dev libvdpau-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev texinfo zlib1g-dev \
                        libfdk-aac-dev libfftw3-dev libpostproc-dev libopenjp2-7-dev libavfilter-dev libvo-aacenc-dev \
                        libfontconfig-dev frei0r-plugins-dev libavresample-dev libssl-dev gettext libde265-dev libsrtp2-dev \
-                       libvo-aacenc-dev patch x265 x264
+                       libvo-aacenc-dev patch x265 x264 ninja-build python3-pip && \
+    pip3 install meson && \
+    apt-get clean
 
 RUN curl -o gstreamer-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${GST_VERSION}.tar.xz && \
     curl -o gst-plugins-base-${GST_VERSION}.tar.xz https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-${GST_VERSION}.tar.xz && \
@@ -65,9 +68,12 @@ RUN cd gstreamer-${GST_VERSION} && \
     make install && \
     cd ../gst-plugins-bad-${GST_VERSION} && \
     patch ext/curl/gstcurlbasesink.c < ../patch.diff && \
-    ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
-    make -j $CORES && \
-    make install && \
+    meson build && \
+    ninja -C build  && \
+    ninja -C build install && \
+#    ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
+#    make -j $CORES && \
+#    make install && \
     cd ../gst-plugins-ugly-${GST_VERSION} && \
     ./autogen.sh --prefix=$GS_OUT_PATH --disable-gtk-doc && \
     make -j $CORES && \
@@ -81,8 +87,7 @@ RUN cd gstreamer-${GST_VERSION} && \
     make -j $CORES && \
     make install && \
     cd ../../ && \
-    rm -rf gstreamer &&  \
-    apt-get clean
+    rm -rf gstreamer
 
 ARG VERSION
 ENV NODE_ENV production
