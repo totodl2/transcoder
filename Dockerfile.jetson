@@ -1,5 +1,6 @@
 FROM gitlab.webini.fr:8444/totodl/nvidia/arm64/node:10.24.0
 
+ARG CORE=6
 ENV NODE_ENV production
 ENV PORT 3000
 
@@ -17,7 +18,7 @@ RUN export GST_VERSION=`gst-launch-1.0 --version | xargs -n 1 | tail -n 2 | head
     cd gst-plugins-bad-${GST_VERSION} && \
     patch ext/curl/gstcurlbasesink.c < ../patch.diff && \
     ./autogen.sh --disable-gtk-doc --prefix=$GS_OUT_PATH && \
-    make && \
+    make -j $CORE && \
     make install && \
     cp /usr/lib/gstreamer-1.0/libgst* /usr/lib/aarch64-linux-gnu/gstreamer-1.0/ && \
     cd ../ && \
